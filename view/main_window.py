@@ -7,6 +7,8 @@ from PyQt5.QtCore import Qt
 
 from view.slider import Slider
 
+from view.cine_signal_viewer import CineSignalViewer
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -103,7 +105,10 @@ class MainWindow(QMainWindow):
         self.sliders_widget_layout.addWidget(s1)
         self.sliders_widget_layout.addWidget(s2)
 
-
+        self.input_cine_signal_viewer = CineSignalViewer()
+        self.output_cine_signal_viewer = CineSignalViewer()
+        self.graphs_widget_layout.addWidget(self.input_cine_signal_viewer)
+        self.graphs_widget_layout.addWidget(self.output_cine_signal_viewer)
         
         
 
