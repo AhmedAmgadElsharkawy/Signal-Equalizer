@@ -9,6 +9,8 @@ from view.slider import Slider
 
 from view.cine_signal_viewer import CineSignalViewer
 
+from view.frequency_domain_viewer import FrequencyDomainViewer
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -110,6 +112,9 @@ class MainWindow(QMainWindow):
         self.graphs_widget_layout.addWidget(self.input_cine_signal_viewer)
         self.graphs_widget_layout.addWidget(self.output_cine_signal_viewer)
         
+
+        self.frequency_domain_viewer = FrequencyDomainViewer()
+        self.graphs_widget_layout.addWidget(self.frequency_domain_viewer)
         
 
         
