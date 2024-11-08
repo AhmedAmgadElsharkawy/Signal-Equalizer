@@ -9,9 +9,11 @@ class Slider(QWidget):
     def __init__(self,min_range_value = 0,max_range_value = 100,name = "slider"):
         super().__init__()
         self.main_layout = QHBoxLayout(self)
+        self.min_range_value = min_range_value
+        self.max_range_value = max_range_value
         
         self.slider_name = QLabel(name)
-        self.slider_value = QLabel(f"{min_range_value}")
+        # self.slider_value = QLabel(f"{min_range_value}")
         self.slider_widget = QSlider(Qt.Orientation.Horizontal)
         self.slider_widget.setFixedWidth(200)
         
