@@ -1,20 +1,14 @@
-from PyQt5.QtWidgets import (
-  QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
-    QLabel, QPushButton, QComboBox,QScrollArea,QCheckBox,QButtonGroup,QRadioButton
-)
+from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QComboBox, QScrollArea, QCheckBox, QButtonGroup, QRadioButton
 from PyQt5.QtCore import Qt
 from view.slider import Slider
-
+from model.mode_frequencies import mode_sliders_data
 from view.cine_signal_viewer import CineSignalViewer
 from view.frequency_domain_viewer import FrequencyDomainViewer
-
 from controller.frequency_domain_controller import FrequencyDomainController
 from controller.mode_controller import ModeController
 from controller.output_controller import OutputController
 from controller.playback_buttons_controller import PlaybackButtonsController
 from controller.spectrogram_controller import SpectrogramController
-
-
 
 
 class MainWindow(QMainWindow):
@@ -36,11 +30,9 @@ class MainWindow(QMainWindow):
         self.controls_widget_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.controls_widget.setFixedWidth(350)
         self.controls_widget_layout.setSpacing(15)
-        
 
         self.main_layout.addWidget(self.graphs_widget)
         self.main_layout.addWidget(self.controls_widget)
-
 
         self.controls_buttons_widget = QWidget()
         self.controls_buttons_widget.setObjectName("controls_buttons_widget")
@@ -59,7 +51,6 @@ class MainWindow(QMainWindow):
         self.controls_buttons_widget_layout.addWidget(self.play_rewind_widget)
         self.controls_buttons_widget_layout.addWidget(self.speed_up_down_widget)
 
-
         self.load_signal_button = QPushButton("load")
         self.clear_signal_button = QPushButton("clear")
         self.load_reset_widget_layout.addWidget(self.load_signal_button)
@@ -75,14 +66,14 @@ class MainWindow(QMainWindow):
 
         self.spectrograms_visibility_widget = QWidget()
         self.spectrograms_visibility_layout = QHBoxLayout(self.spectrograms_visibility_widget)
-        self.visible_label = QLabel("spectrograms")
+        self.visible_label = QLabel("Spectrograms")
         self.visible_checkbox = QCheckBox()
+        self.visible_checkbox.setChecked(True)
+        self.visible_checkbox.stateChanged.connect(self.toggle_spectrograms)
         self.spectrograms_visibility_layout.addWidget(self.visible_label)
         self.spectrograms_visibility_layout.addStretch()
         self.spectrograms_visibility_layout.addWidget(self.visible_checkbox)
         self.controls_buttons_widget_layout.addWidget(self.spectrograms_visibility_widget)
-
-
 
         self.mode_widget = QWidget()
         self.mode_widget.setObjectName("mode_widget")
@@ -93,16 +84,19 @@ class MainWindow(QMainWindow):
 
         self.mode_label = QLabel("Choose Mode")
         self.mode_label.setObjectName("mode_label")
-        self.mode_combobox  = QComboBox()
+        self.mode_combobox = QComboBox()
         self.mode_combobox.setObjectName("mode_combobox")
-        self.mode_combobox.addItems(["Uniform Range","Musical Instruments","Animal Sounds","ECG Abnormalities"])
+        self.mode_combobox.addItems(["Uniform Range", "Musical Instruments", "Animal Sounds", "ECG Abnormalities"])
         self.mode_widget_layout.addWidget(self.mode_label)
         self.mode_widget_layout.addWidget(self.mode_combobox)
 
-
         self.sliders_widget = QScrollArea()
         self.sliders_widget.setObjectName("sliders_widget")
-        self.sliders_widget_layout = QVBoxLayout(self.sliders_widget)
+        self.sliders_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.sliders_widget.setWidgetResizable(True) 
+        self.sliders_content_widget = QWidget()
+        self.sliders_widget.setWidget(self.sliders_content_widget)  
+        self.sliders_widget_layout = QVBoxLayout(self.sliders_content_widget)
         self.sliders_widget_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.controls_widget_layout.addWidget(self.sliders_widget)
 
@@ -111,9 +105,9 @@ class MainWindow(QMainWindow):
         self.frequency_plot_scale_widget_layout = QVBoxLayout(self.frequency_plot_scale_widget)
         self.choose_scale_label = QLabel("Choose frequency plot scale")
         self.choose_scale_label.setObjectName("choose_scale_label")
-        self.scale_radio_buttons_group = QButtonGroup() 
+        self.scale_radio_buttons_group = QButtonGroup()
         self.linear_scale_radio_button = QRadioButton("Linear Scale")
-        self.audiogram_scale_radio_button =QRadioButton("Audiogram Scale")
+        self.audiogram_scale_radio_button = QRadioButton("Audiogram Scale")
         self.scale_radio_buttons_group.addButton(self.linear_scale_radio_button)
         self.scale_radio_buttons_group.addButton(self.audiogram_scale_radio_button)
         self.frequency_plot_scale_widget_layout.addWidget(self.choose_scale_label)
@@ -122,40 +116,50 @@ class MainWindow(QMainWindow):
         self.controls_widget_layout.addWidget(self.frequency_plot_scale_widget)
         self.linear_scale_radio_button.setChecked(True)
 
-        
-
-        s1 = Slider()
-        s2 = Slider()
-        self.sliders_widget_layout.addWidget(s1)
-        self.sliders_widget_layout.addWidget(s2)
+        self.load_mode_sliders()
 
         self.input_cine_signal_viewer = CineSignalViewer()
         self.output_cine_signal_viewer = CineSignalViewer()
         self.graphs_widget_layout.addWidget(self.input_cine_signal_viewer)
         self.graphs_widget_layout.addWidget(self.output_cine_signal_viewer)
-        
 
         self.frequency_domain_viewer = FrequencyDomainViewer()
         self.graphs_widget_layout.addWidget(self.frequency_domain_viewer)
+
+        self.mode_combobox.currentIndexChanged.connect(self.load_mode_sliders)
 
         self.mode_controller = ModeController(self)
         self.playback_buttons_controller = PlaybackButtonsController(self)
         self.spectrogram_controller = SpectrogramController(self)
         self.frequency_domain_controller = FrequencyDomainController(self)
         self.output_controller = OutputController(self)
-        
-        
-        
 
-        
-        
-        
+
+        self.sliders_widget.verticalScrollBar().setStyleSheet("""
+            QScrollBar:vertical {
+                border: none;
+                background: #f0f0f0;
+                width: 6px;
+                border-radius: 3px;
+            }
+            QScrollBar::handle:vertical {
+                background: #888;
+                min-height: 30px;
+                border-radius: 5px;
+            }
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+                background: none;
+            }
+            QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+                background: none;
+            }
+        """)
+
         self.setStyleSheet("""
             *{
                 padding:0px;
                 margin:0px;
             }
-
             #controls_widget{
                 border:2px solid gray;
                 border-radius:15px;
@@ -191,7 +195,24 @@ class MainWindow(QMainWindow):
             }
         """)
 
+    def load_mode_sliders(self):
+        for i in reversed(range(self.sliders_widget_layout.count())):
+            widget = self.sliders_widget_layout.itemAt(i).widget()
+            if widget is not None:
+                widget.deleteLater()
+
+        mode = self.mode_combobox.currentText()
+        mode_sliders_list = mode_sliders_data[mode]
+        for slider_object in mode_sliders_list:
+            slider = Slider(name=slider_object.slider_label, min_range_value=slider_object.min_freq, max_range_value=slider_object.max_freq)
+            self.sliders_widget_layout.addWidget(slider)
+
+    def toggle_spectrograms(self,state):
+        if state == Qt.Unchecked:
+            self.input_cine_signal_viewer.signal_spectrogram.setVisible(False)
+            self.output_cine_signal_viewer.signal_spectrogram.setVisible(False)
+        else:
+            self.input_cine_signal_viewer.signal_spectrogram.setVisible(True)
+            self.output_cine_signal_viewer.signal_spectrogram.setVisible(True)
 
 
-
-        

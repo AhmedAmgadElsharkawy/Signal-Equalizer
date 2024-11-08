@@ -21,27 +21,22 @@ class CineSignalViewer(QWidget):
         self.cine_signal_plot.getAxis('bottom').setTextPen(pg.mkPen('k')) 
         self.cine_signal_plot.getAxis('left').setTextPen(pg.mkPen('k'))  
 
-        # Load the icon from the assets folder
         self.muted_pixmap = QPixmap('assets/icons/mute.png')
         self.unmuted_pixmap = QPixmap('assets/icons/unmute.png')
 
-        # Create the icon item and add it to the scene
         self.muted_sound_icon_item = QGraphicsPixmapItem(self.muted_pixmap)
         self.muted_sound_icon_item.mousePressEvent = self.click_icon
 
         self.unmuted_sound_icon_item = QGraphicsPixmapItem(self.unmuted_pixmap)
         self.unmuted_sound_icon_item.mousePressEvent = self.click_icon
         
-        # Scale the icon to 40x40 pixels
         self.muted_sound_icon_item.setScale(30 / self.muted_pixmap.width())
         self.unmuted_sound_icon_item.setScale(30 / self.unmuted_pixmap.width())
         
-        # Add the icon item to the plot's scene
         self.cine_signal_plot.scene().addItem(self.muted_sound_icon_item)
         
 
 
-        # Create the spectrogram figure
         self.spectrogram_figure, self.spectogram_ax = plt.subplots()
         self.signal_spectrogram = FigureCanvas(self.spectrogram_figure)
         self.main_layout.addWidget(self.signal_spectrogram)
@@ -53,15 +48,17 @@ class CineSignalViewer(QWidget):
         self.reposition_icon()
 
     def reposition_icon(self):
-        # Get the current size of the PlotWidget
         plot_width = self.cine_signal_plot.width()
         plot_height = self.cine_signal_plot.height()
 
-        # Calculate icon position for bottom-right corner
         icon_width = 40
         icon_height = 40
-        self.muted_sound_icon_item.setPos(plot_width - icon_width - 10, plot_height - icon_height - 15)  # Small offset for padding
-        self.unmuted_sound_icon_item.setPos(plot_width - icon_width - 10, plot_height - icon_height - 15)  # Small offset for padding
+        # self.muted_sound_icon_item.setPos(plot_width - icon_width - 10, plot_height - icon_height - 15) 
+        # self.unmuted_sound_icon_item.setPos(plot_width - icon_width - 10, plot_height - icon_height - 15) 
+
+        
+        self.muted_sound_icon_item.setPos(icon_width + 10,icon_height -25 ) 
+        self.unmuted_sound_icon_item.setPos(icon_width + 10,icon_height -25 ) 
 
     def click_icon(self,event):
         if self.sound_played:

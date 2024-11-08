@@ -14,6 +14,7 @@ class Slider(QWidget):
         self.slider_value = QLabel(f"{min_range_value}")
         self.slider_widget = QSlider(Qt.Orientation.Horizontal)
         self.slider_widget.setFixedWidth(200)
+        
         # self.slider_widget.setRange(min_range_value,max_range_value)
 
         # for 10 ticks
