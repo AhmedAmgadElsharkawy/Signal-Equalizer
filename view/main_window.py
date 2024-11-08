@@ -61,6 +61,24 @@ class MainWindow(QMainWindow):
 
 
 
+        self.mode_widget = QWidget()
+        self.mode_widget.setObjectName("mode_widget")
+        self.mode_widget.setFixedHeight(80)
+        self.mode_widget_layout = QVBoxLayout(self.mode_widget)
+        self.mode_widget_layout.setAlignment(Qt.AlignmentFlag.AlignVCenter)
+        self.controls_widget_layout.addWidget(self.mode_widget)
+
+        self.mode_label = QLabel("Choose Mode")
+        self.mode_label.setObjectName("mode_label")
+        self.mode_combobox  = QComboBox()
+        self.mode_combobox.setObjectName("mode_combobox")
+        self.mode_combobox.addItems(["Uniform Range","Musical Instruments","Animal Sounds","ECG Abnormalities"])
+        self.mode_widget_layout.addWidget(self.mode_label)
+        self.mode_widget_layout.addWidget(self.mode_combobox)
+
+
+        self.sliders_widget = QWidget()
+        self.sliders_widget_layout = QVBoxLayout(self.sliders_widget)
         
         
 
@@ -79,12 +97,22 @@ class MainWindow(QMainWindow):
                 padding:15px;
             }
             #controls_buttons_widget{
-                border:2px solid gray;   
+                border:1px solid gray;   
                 border-radius:15px;      
-                padding:0px;     
             }
             #controls_buttons_widget QPushButton{
                 padding:4px 0px;                
+            }
+            #mode_widget{
+                border:1px solid gray;   
+                border-radius:15px;   
+            }
+            #mode_combobox{
+                padding:3px 6px;               
+            }
+            #mode_label{
+                padding:0px 3px;
+                font-size:12px;
             }
         """)
 
