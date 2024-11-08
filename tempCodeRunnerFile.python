@@ -1,0 +1,53 @@
+import sys
+import numpy as np
+import pyqtgraph as pg
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
+from scipy.signal import spectrogram
+
+class SpectrogramWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        # Create a widget and layout
+        self.main_widget = QWidget(self)
+        self.layout = QVBoxLayout(self.main_widget)
+
+        # Create the PyQtGraph plot widget
+        self.plot_widget = pg.PlotWidget()
+        self.layout.addWidget(self.plot_widget)
+
+        self.setCentralWidget(self.main_widget)
+        self.setWindowTitle("Spectrogram with PyQtGraph")
+        self.setGeometry(100, 100, 800, 600)
+
+        # Generate and plot the spectrogram
+        self.generate_spectrogram()
+
+    def generate_spectrogram(self):
+        # Generate a sample signal (e.g., a sine wave with noise)
+        fs = 1000  # Sampling frequency
+        t = np.arange(0, 10, 1/fs)  # Time array
+        signal = np.sin(2 * np.pi * 50 * t) + 0.5 * np.random.randn(len(t))
+
+        # Compute the spectrogram using scipy's spectrogram function
+        f, t, Sxx = spectrogram(signal, fs)
+
+        # Plot the spectrogram using PyQtGraph
+        img = pg.ImageItem(10 * np.log10(Sxx))  # Plot the spectrogram in decibels
+        self.plot_widget.addItem(img)
+        self.plot_widget.setTitle("Spectrogram")
+
+        # Set axis labels (correct usage)
+        self.plot_widget.getAxis('left').setLabel('Frequency (Hz)')
+        self.plot_widget.getAxis('bottom').setLabel('Time (s)')
+
+        # Set axis ranges
+        self.plot_widget.setRange(xRange=[0, max(t)], yRange=[0, max(f)])
+
+# Create the Qt application and the main window
+app = QApplication(sys.argv)
+window = SpectrogramWindow()
+window.show()
+
+# Start the Qt event loop
+sys.exit(app.exec_())

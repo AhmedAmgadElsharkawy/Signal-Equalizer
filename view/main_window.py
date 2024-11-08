@@ -1,9 +1,9 @@
-from PyQt6.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
-    QLabel, QSlider, QPushButton, QComboBox, QFrame, QGroupBox,QScrollArea,QCheckBox
+from PyQt5.QtWidgets import (
+  QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
+    QLabel, QPushButton, QComboBox,QScrollArea,QCheckBox
 )
 
-from PyQt6.QtCore import Qt
+from PyQt5.QtCore import Qt
 
 from view.slider import Slider
 
@@ -18,6 +18,7 @@ class MainWindow(QMainWindow):
         self.main_layout = QHBoxLayout(self.main_widget)
 
         self.graphs_widget = QWidget()
+        self.graphs_widget.setObjectName("graphs_widget")
         self.graphs_widget_layout = QVBoxLayout(self.graphs_widget)
 
         self.controls_widget = QWidget()
@@ -34,7 +35,7 @@ class MainWindow(QMainWindow):
 
         self.controls_buttons_widget = QWidget()
         self.controls_buttons_widget.setObjectName("controls_buttons_widget")
-        self.controls_buttons_widget.setFixedHeight(170)
+        self.controls_buttons_widget.setFixedHeight(250)
         self.controls_buttons_widget_layout = QVBoxLayout(self.controls_buttons_widget)
         self.controls_buttons_widget_layout.setAlignment(Qt.AlignmentFlag.AlignVCenter)
         self.controls_widget_layout.addWidget(self.controls_buttons_widget)
@@ -62,6 +63,15 @@ class MainWindow(QMainWindow):
         self.speed_down_button = QPushButton("speed down")
         self.speed_up_down_widget_layout.addWidget(self.speed_up_button)
         self.speed_up_down_widget_layout.addWidget(self.speed_down_button)
+
+        self.spectrograms_visibility_widget = QWidget()
+        self.spectrograms_visibility_layout = QHBoxLayout(self.spectrograms_visibility_widget)
+        self.visible_label = QLabel("spectrograms")
+        self.visible_checkbox = QCheckBox()
+        self.spectrograms_visibility_layout.addWidget(self.visible_label)
+        self.spectrograms_visibility_layout.addStretch()
+        self.spectrograms_visibility_layout.addWidget(self.visible_checkbox)
+        self.controls_buttons_widget_layout.addWidget(self.spectrograms_visibility_widget)
 
 
 
@@ -95,6 +105,7 @@ class MainWindow(QMainWindow):
 
 
         
+        
 
         
         
@@ -115,7 +126,7 @@ class MainWindow(QMainWindow):
                 border-radius:15px;      
             }
             #controls_buttons_widget QPushButton{
-                padding:4px 0px;                
+                padding:7px 0px;                
             }
             #mode_widget{
                 border:1px solid gray;   
@@ -126,11 +137,14 @@ class MainWindow(QMainWindow):
             }
             #mode_label{
                 padding:0px 3px;
-                font-size:12px;
             }
             #sliders_widget{
                 border:1px solid gray;         
                 border-radius:15px;        
+            }
+            #graphs_widget{
+                border:2px solid gray;
+                border-radius:15px;      
             }
         """)
 
