@@ -1,0 +1,26 @@
+# Virtual environment
+signal_equalizer_venv/
+
+# Python bytecode files
+*.pyc
+__pycache__/
+
+# Editor-specific files
+.vscode/
+.idea/
+
+# Log files
+*.log
+
+
+# Temporary files
+*.tmp
+*.temp
+
+# IDE-specific settings
+*.sublime-workspace
+*.sublime-project
+
+# Environment variable files
+.env
+
