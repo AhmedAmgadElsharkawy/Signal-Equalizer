@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (
   QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
-    QLabel, QPushButton, QComboBox,QScrollArea,QCheckBox
+    QLabel, QPushButton, QComboBox,QScrollArea,QCheckBox,QButtonGroup,QRadioButton
 )
 
 from PyQt5.QtCore import Qt
@@ -100,6 +100,23 @@ class MainWindow(QMainWindow):
         self.sliders_widget_layout = QVBoxLayout(self.sliders_widget)
         self.sliders_widget_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.controls_widget_layout.addWidget(self.sliders_widget)
+
+        self.frequency_plot_scale_widget = QWidget()
+        self.frequency_plot_scale_widget.setObjectName("frequency_plot_scale_widget")
+        self.frequency_plot_scale_widget_layout = QVBoxLayout(self.frequency_plot_scale_widget)
+        self.choose_scale_label = QLabel("Choose frequency plot scale")
+        self.choose_scale_label.setObjectName("choose_scale_label")
+        self.scale_radio_buttons_group = QButtonGroup() 
+        self.linear_scale_radio_button = QRadioButton("Linear Scale")
+        self.audiogram_scale_radio_button =QRadioButton("Audiogram Scale")
+        self.scale_radio_buttons_group.addButton(self.linear_scale_radio_button)
+        self.scale_radio_buttons_group.addButton(self.audiogram_scale_radio_button)
+        self.frequency_plot_scale_widget_layout.addWidget(self.choose_scale_label)
+        self.frequency_plot_scale_widget_layout.addWidget(self.linear_scale_radio_button)
+        self.frequency_plot_scale_widget_layout.addWidget(self.audiogram_scale_radio_button)
+        self.controls_widget_layout.addWidget(self.frequency_plot_scale_widget)
+        self.linear_scale_radio_button.setChecked(True)
+
         
 
         s1 = Slider()
@@ -149,12 +166,15 @@ class MainWindow(QMainWindow):
                 padding:0px 3px;
             }
             #sliders_widget{
-                border:1px solid gray;         
-                border-radius:15px;        
+                border:1px solid gray;              
             }
             #graphs_widget{
                 border:2px solid gray;
                 border-radius:15px;      
+            }
+            #frequency_plot_scale_widget{
+                border:1px solid gray;         
+                border-radius:15px;
             }
         """)
 
