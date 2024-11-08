@@ -2,14 +2,19 @@ from PyQt5.QtWidgets import (
   QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
     QLabel, QPushButton, QComboBox,QScrollArea,QCheckBox,QButtonGroup,QRadioButton
 )
-
 from PyQt5.QtCore import Qt
-
 from view.slider import Slider
 
 from view.cine_signal_viewer import CineSignalViewer
-
 from view.frequency_domain_viewer import FrequencyDomainViewer
+
+from controller.frequency_domain_controller import FrequencyDomainController
+from controller.mode_controller import ModeController
+from controller.output_controller import OutputController
+from controller.playback_buttons_controller import PlaybackButtonsController
+from controller.spectrogram_controller import SpectrogramController
+
+
 
 
 class MainWindow(QMainWindow):
@@ -132,6 +137,14 @@ class MainWindow(QMainWindow):
 
         self.frequency_domain_viewer = FrequencyDomainViewer()
         self.graphs_widget_layout.addWidget(self.frequency_domain_viewer)
+
+        self.mode_controller = ModeController(self)
+        self.playback_buttons_controller = PlaybackButtonsController(self)
+        self.spectrogram_controller = SpectrogramController(self)
+        self.frequency_domain_controller = FrequencyDomainController(self)
+        self.output_controller = OutputController(self)
+        
+        
         
 
         
