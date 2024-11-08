@@ -5,6 +5,8 @@ from PyQt6.QtWidgets import (
 
 from PyQt6.QtCore import Qt
 
+from view.slider import Slider
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -23,6 +25,8 @@ class MainWindow(QMainWindow):
         self.controls_widget_layout = QVBoxLayout(self.controls_widget)
         self.controls_widget_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.controls_widget.setFixedWidth(350)
+        self.controls_widget_layout.setSpacing(15)
+        
 
         self.main_layout.addWidget(self.graphs_widget)
         self.main_layout.addWidget(self.controls_widget)
@@ -77,9 +81,19 @@ class MainWindow(QMainWindow):
         self.mode_widget_layout.addWidget(self.mode_combobox)
 
 
-        self.sliders_widget = QWidget()
+        self.sliders_widget = QScrollArea()
+        self.sliders_widget.setObjectName("sliders_widget")
         self.sliders_widget_layout = QVBoxLayout(self.sliders_widget)
+        self.sliders_widget_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.controls_widget_layout.addWidget(self.sliders_widget)
         
+
+        s1 = Slider()
+        s2 = Slider()
+        self.sliders_widget_layout.addWidget(s1)
+        self.sliders_widget_layout.addWidget(s2)
+
+
         
 
         
@@ -94,7 +108,7 @@ class MainWindow(QMainWindow):
             #controls_widget{
                 border:2px solid gray;
                 border-radius:15px;
-                padding:15px;
+                padding:10px 15px;
             }
             #controls_buttons_widget{
                 border:1px solid gray;   
@@ -113,6 +127,10 @@ class MainWindow(QMainWindow):
             #mode_label{
                 padding:0px 3px;
                 font-size:12px;
+            }
+            #sliders_widget{
+                border:1px solid gray;         
+                border-radius:15px;        
             }
         """)
 
