@@ -14,6 +14,7 @@ from controller.spectrogram_controller import SpectrogramController
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.file_path = None
         self.setWindowTitle('Sampling Theory Studio')
         self.setGeometry(100, 100, 1400, 900)
         self.main_widget = QWidget(self)
@@ -120,6 +121,10 @@ class MainWindow(QMainWindow):
 
         self.input_cine_signal_viewer = CineSignalViewer()
         self.output_cine_signal_viewer = CineSignalViewer()
+        self.input_cine_signal_viewer.cine_signal_plot.sigXRangeChanged.connect(self.synchronize_input_graph)
+        self.input_cine_signal_viewer.cine_signal_plot.sigYRangeChanged.connect(self.synchronize_input_graph)
+        self.output_cine_signal_viewer.cine_signal_plot.sigXRangeChanged.connect(self.synchronize_output_graph)
+        self.output_cine_signal_viewer.cine_signal_plot.sigYRangeChanged.connect(self.synchronize_output_graph)
         self.graphs_widget_layout.addWidget(self.input_cine_signal_viewer)
         self.graphs_widget_layout.addWidget(self.output_cine_signal_viewer)
 
@@ -129,12 +134,12 @@ class MainWindow(QMainWindow):
         self.mode_combobox.currentIndexChanged.connect(self.load_mode_sliders)
 
         self.mode_controller = ModeController(self)
-        self.playback_buttons_controller = PlaybackButtonsController(self)
+        self.buttons_controller = PlaybackButtonsController(self)
         self.spectrogram_controller = SpectrogramController(self)
         self.frequency_domain_controller = FrequencyDomainController(self)
         self.output_controller = OutputController(self)
 
-        self.load_signal_button.clicked.connect(self.playback_buttons_controller.loadSignal)
+        self.load_signal_button.clicked.connect(self.buttons_controller.loadSignal)
 
         self.sliders_widget.verticalScrollBar().setStyleSheet("""
             QScrollBar:vertical {
@@ -209,6 +214,14 @@ class MainWindow(QMainWindow):
             self.sliders_widget_layout.addWidget(slider)
             slider.valueChanged.connect(self.on_slider_value_changed)
 
+    def toggle_spectrograms(self,state):
+        if state == Qt.Unchecked:
+            self.input_cine_signal_viewer.signal_spectrogram.setVisible(False)
+            self.output_cine_signal_viewer.signal_spectrogram.setVisible(False)
+        else:
+            self.input_cine_signal_viewer.signal_spectrogram.setVisible(True)
+            self.output_cine_signal_viewer.signal_spectrogram.setVisible(True)
+    
     def on_slider_value_changed(self, value):
         # This function will be called whenever a slider's value changes
         sender_slider = self.sender()  # This will be the `Slider` instance
@@ -217,14 +230,4 @@ class MainWindow(QMainWindow):
         min_freq = sender_slider.min_range_value
         max_freq = sender_slider.max_range_value
 
-        print(f"Slider value changed to {value}")
-        print(f"Slider min frequency: {min_freq}, max frequency: {max_freq}")
-        self.output_controller.sliderChanged()
-
-    def toggle_spectrograms(self,state):
-        if state == Qt.Unchecked:
-            self.input_cine_signal_viewer.signal_spectrogram.setVisible(False)
-            self.output_cine_signal_viewer.signal_spectrogram.setVisible(False)
-        else:
-            self.input_cine_signal_viewer.signal_spectrogram.setVisible(True)
-            self.output_cine_signal_viewer.signal_spectrogram.setVisible(True)
+        self.output_controller.sliderChanged(value, min_freq, max_freq)

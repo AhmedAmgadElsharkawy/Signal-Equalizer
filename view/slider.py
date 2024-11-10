@@ -35,11 +35,19 @@ class Slider(QWidget):
         self.main_layout.addWidget(self.slider_widget)
         # self.main_layout.addWidget(self.slider_value)
 
-        self.slider_widget.valueChanged.connect(self.emit_value_changed)
+        self.connect_value_changed()
         
     def emit_value_changed(self, value):
         # Emit the custom signal with the slider value
         self.valueChanged.emit(value)
+
+    def connect_value_changed(self):
+        # Disconnect the slider's valueChanged signal from emit_value_changed
+        self.slider_widget.valueChanged.connect(self.emit_value_changed)
+
+    def disconnect_value_changed(self):
+        # Disconnect the slider's valueChanged signal from emit_value_changed
+        self.slider_widget.valueChanged.disconnect(self.emit_value_changed)
         
 
         
