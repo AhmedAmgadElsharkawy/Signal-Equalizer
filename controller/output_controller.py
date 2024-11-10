@@ -6,7 +6,8 @@ class OutputController:
         self.main_widnow = main_window
 
     def sliderChanged(self, value, min_freq, max_freq):
-        self.main_widnow.buttons_controller.plot_fourier_transform(self.main_widnow.file_path, value, min_freq, max_freq)
+        self.main_widnow.signal.signal_processing(value, min_freq, max_freq)
+        self.main_widnow.buttons_controller.plot_the_signal()
 
     def save_and_play_wav(self, file_path, modified_data, sample_rate): 
         # Normalize the modified data to range [-32767, 32767] (16-bit PCM) 
@@ -19,3 +20,6 @@ class OutputController:
         sd.wait() 
         return output_file_path
         # Wait until the file is done playing return output_file_path
+
+    def calc(self):
+        pass

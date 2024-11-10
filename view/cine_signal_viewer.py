@@ -6,9 +6,11 @@ from PyQt5.QtWidgets import QGraphicsPixmapItem
 from PyQt5.QtGui import QPixmap
 
 class CineSignalViewer(QWidget):
-    def __init__(self):
+    def __init__(self, main_window, name):
         super().__init__()
         self.sound_played = False
+        self.name = name
+        self.main_window = main_window
         self.main_layout = QHBoxLayout(self)
 
         # Create the plot widget
@@ -64,7 +66,12 @@ class CineSignalViewer(QWidget):
         if self.sound_played:
             self.cine_signal_plot.scene().removeItem(self.unmuted_sound_icon_item)
             self.cine_signal_plot.scene().addItem(self.muted_sound_icon_item)
+            self.main_window.signal.stop_sound()
         else:
             self.cine_signal_plot.scene().removeItem(self.muted_sound_icon_item)
             self.cine_signal_plot.scene().addItem(self.unmuted_sound_icon_item)
+            if self.name == "input":
+                self.main_window.signal.save_and_play_wav(True, self.main_window.signal.data, self.main_window.signal.sample_rate)
+            else:
+                self.main_window.signal.save_and_play_wav(False, self.main_window.signal.sound_data, self.main_window.signal.sample_rate)
         self.sound_played = not self.sound_played

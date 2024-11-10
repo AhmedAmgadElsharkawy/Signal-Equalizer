@@ -12,40 +12,18 @@ class PlaybackButtonsController:
         file_path, _ = QFileDialog.getOpenFileName(self.main_widnow, "Open .wav file", "", "Audio Files (*.wav)")
         if file_path:
             self.main_widnow.file_path = file_path
-            self.plot_fourier_transform(file_path, 1, 0, 0)
+            self.main_widnow.signal.calculate_data(file_path)
+            self.plot_the_signal()
             self.set_all_sliders_to_one()
 
-    def plot_fourier_transform(self, file_path, value, min_freq, max_freq):
-        # Read the .wav file
-        sample_rate, data = wavfile.read(file_path)
-        time = np.arange(0, len(data)) / sample_rate  # Create the time axis
-        
-        # Use only one channel if stereo
-        if len(data.shape) > 1:
-            data = data[:, 0]
-        
-        # Fourier Transform
-        N = len(data)
-        T = 1.0 / sample_rate
-        freqs_coeffs = np.fft.rfft(data)
-        freqs = np.fft.rfftfreq(N, T)
-        magnitudes = 10 / N * np.abs(freqs_coeffs)
-        
-        freq_range_indices = np.where((freqs >= min_freq) & (freqs <= max_freq))
-        if value > 1:
-            value = 1 + value / 10
-        magnitudes[freq_range_indices] *= value
-        freqs_coeffs[freq_range_indices] *= value
-        modified_data = np.fft.irfft(freqs_coeffs)
-        voiced_modified_data = modified_data / np.max(np.abs(modified_data))
-
+    def plot_the_signal(self):
         self.main_widnow.frequency_domain_viewer.frequency_domain_plot.clear()
         self.main_widnow.input_cine_signal_viewer.cine_signal_plot.clear()
         self.main_widnow.output_cine_signal_viewer.cine_signal_plot.clear()
 
-        self.main_widnow.frequency_domain_viewer.frequency_domain_plot.plot(freqs, magnitudes, pen=pg.mkPen(color=(170, 0, 0)))
-        self.main_widnow.input_cine_signal_viewer.cine_signal_plot.plot(time, data, pen=pg.mkPen(color=(170, 0, 0)))
-        self.main_widnow.output_cine_signal_viewer.cine_signal_plot.plot(time, modified_data, pen=pg.mkPen(color=(170, 0, 0)))
+        self.main_widnow.input_cine_signal_viewer.cine_signal_plot.plot(self.main_widnow.signal.time, self.main_widnow.signal.data, pen=pg.mkPen(color=(170, 0, 0)))
+        self.main_widnow.output_cine_signal_viewer.cine_signal_plot.plot(self.main_widnow.signal.time, self.main_widnow.signal.modified_data, pen=pg.mkPen(color=(170, 0, 0)))
+        self.main_widnow.frequency_domain_viewer.frequency_domain_plot.plot(self.main_widnow.signal.freqs, self.main_widnow.signal.magnitudes, pen=pg.mkPen(color=(170, 0, 0)))
 
     def set_all_sliders_to_one(self):
         # Loop through all widgets in sliders_widget_layout

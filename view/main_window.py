@@ -9,12 +9,13 @@ from controller.mode_controller import ModeController
 from controller.output_controller import OutputController
 from controller.playback_buttons_controller import PlaybackButtonsController
 from controller.spectrogram_controller import SpectrogramController
+from model.signal_model import Signal
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.file_path = None
+        self.signal = Signal()
         self.isSyncing = False
         self.setWindowTitle('Sampling Theory Studio')
         self.setGeometry(100, 100, 1400, 900)
@@ -120,8 +121,8 @@ class MainWindow(QMainWindow):
 
         self.load_mode_sliders()
 
-        self.input_cine_signal_viewer = CineSignalViewer()
-        self.output_cine_signal_viewer = CineSignalViewer()
+        self.input_cine_signal_viewer = CineSignalViewer(self, "input")
+        self.output_cine_signal_viewer = CineSignalViewer(self, "output")
         self.input_cine_signal_viewer.cine_signal_plot.sigXRangeChanged.connect(self.synchronize_input_graph)
         self.input_cine_signal_viewer.cine_signal_plot.sigYRangeChanged.connect(self.synchronize_input_graph)
         self.output_cine_signal_viewer.cine_signal_plot.sigXRangeChanged.connect(self.synchronize_output_graph)
@@ -215,8 +216,9 @@ class MainWindow(QMainWindow):
             self.sliders_widget_layout.addWidget(slider)
             slider.slider_widget.setValue(1)
             slider.valueChanged.connect(self.on_slider_value_changed)
-        if self.file_path:
-            self.buttons_controller.plot_fourier_transform(self.file_path, 1, 0, 0)
+        if self.signal.sample_rate:
+            self.signal.signal_processing(1, 0, 0)
+            self.buttons_controller.plot_the_signal()
 
     def toggle_spectrograms(self,state):
         if state == Qt.Unchecked:
