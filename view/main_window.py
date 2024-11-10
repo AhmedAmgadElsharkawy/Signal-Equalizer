@@ -9,10 +9,6 @@ from controller.mode_controller import ModeController
 from controller.output_controller import OutputController
 from controller.playback_buttons_controller import PlaybackButtonsController
 from controller.spectrogram_controller import SpectrogramController
-import numpy as np
-from scipy.fft import fft
-import pyqtgraph as pg
-from scipy.io import wavfile
 
 
 class MainWindow(QMainWindow):
@@ -59,7 +55,6 @@ class MainWindow(QMainWindow):
         self.clear_signal_button = QPushButton("clear")
         self.load_reset_widget_layout.addWidget(self.load_signal_button)
         self.load_reset_widget_layout.addWidget(self.clear_signal_button)
-        self.load_signal_button.clicked.connect(self.loadSignal)
         self.play_button = QPushButton("play")
         self.rewind_button = QPushButton("rewind")
         self.play_rewind_widget_layout.addWidget(self.play_button)
@@ -139,6 +134,7 @@ class MainWindow(QMainWindow):
         self.frequency_domain_controller = FrequencyDomainController(self)
         self.output_controller = OutputController(self)
 
+        self.load_signal_button.clicked.connect(self.playback_buttons_controller.loadSignal)
 
         self.sliders_widget.verticalScrollBar().setStyleSheet("""
             QScrollBar:vertical {
@@ -209,23 +205,21 @@ class MainWindow(QMainWindow):
         mode = self.mode_combobox.currentText()
         mode_sliders_list = mode_sliders_data[mode]
         for slider_object in mode_sliders_list:
-            slider = Slider(name=slider_object.slider_label, min_range_value=0, max_range_value=10)
+            slider = Slider(name=slider_object.slider_label, min_range_value=slider_object.min_freq, max_range_value=slider_object.max_freq)
             self.sliders_widget_layout.addWidget(slider)
             slider.valueChanged.connect(self.on_slider_value_changed)
 
-    def set_all_sliders_to_one(self):
-        # Loop through all widgets in sliders_widget_layout
-        for i in range(self.sliders_widget_layout.count()):
-            widget = self.sliders_widget_layout.itemAt(i).widget()
-            
-            # Check if the widget is an instance of your custom Slider class
-            if isinstance(widget, Slider):
-                # Set the slider value to 1
-                widget.slider_widget.setValue(1)
-
     def on_slider_value_changed(self, value):
         # This function will be called whenever a slider's value changes
+        sender_slider = self.sender()  # This will be the `Slider` instance
+
+        # Access the min and max values of the slider
+        min_freq = sender_slider.min_range_value
+        max_freq = sender_slider.max_range_value
+
         print(f"Slider value changed to {value}")
+        print(f"Slider min frequency: {min_freq}, max frequency: {max_freq}")
+        self.output_controller.sliderChanged()
 
     def toggle_spectrograms(self,state):
         if state == Qt.Unchecked:
@@ -234,31 +228,3 @@ class MainWindow(QMainWindow):
         else:
             self.input_cine_signal_viewer.signal_spectrogram.setVisible(True)
             self.output_cine_signal_viewer.signal_spectrogram.setVisible(True)
-
-    def loadSignal(self):
-        file_path, _ = QFileDialog.getOpenFileName(self, "Open .wav file", "", "Audio Files (*.wav)")
-        if file_path:
-            self.plot_fourier_transform(file_path)
-            self.set_all_sliders_to_one()            
-
-    def plot_fourier_transform(self, file_path):
-        # Read the .wav file
-        sample_rate, data = wavfile.read(file_path)
-        x = np.arange(0, len(data)) / sample_rate  # Create the time axis
-        
-        # Use only one channel if stereo
-        if len(data.shape) > 1:
-            data = data[:, 0]
-        
-        # Fourier Transform
-        N = len(data)
-        T = 1.0 / sample_rate
-        yf = fft(data)
-        xf = np.fft.fftfreq(N, T)[:N//2]
-        magnitudes = 2.0 / N * np.abs(yf[:N // 2])
-        
-        # Plot the Fourier Transform
-        self.frequency_domain_viewer.frequency_domain_plot.plot(xf, magnitudes, pen=pg.mkPen(color=(170, 0, 0)))
-        self.input_cine_signal_viewer.cine_signal_plot.plot(x, data, pen=pg.mkPen(color=(170, 0, 0)))
-
-
