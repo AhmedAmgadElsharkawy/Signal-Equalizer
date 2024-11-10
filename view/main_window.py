@@ -209,8 +209,16 @@ class MainWindow(QMainWindow):
         mode = self.mode_combobox.currentText()
         mode_sliders_list = mode_sliders_data[mode]
         for slider_object in mode_sliders_list:
-            slider = Slider(name=slider_object.slider_label, min_range_value=slider_object.min_freq, max_range_value=slider_object.max_freq)
+            slider = Slider(name=slider_object.slider_label, min_range_value=0, max_range_value=10)
             self.sliders_widget_layout.addWidget(slider)
+            slider.valueChanged.connect(self.on_slider_value_changed)
+            
+
+    def on_slider_value_changed(self, value):
+        # This function will be called whenever a slider's value changes
+        print(f"Slider value changed to {value}")
+        print(self)
+        # Add additional actions here
 
     def toggle_spectrograms(self,state):
         if state == Qt.Unchecked:

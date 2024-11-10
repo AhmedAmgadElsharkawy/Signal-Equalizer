@@ -2,10 +2,12 @@ from PyQt5.QtWidgets import (
     QWidget, QHBoxLayout, QLabel, QSlider
 )
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 
 
 class Slider(QWidget):
+    valueChanged = pyqtSignal(int)
+    
     def __init__(self,min_range_value = 0,max_range_value = 100,name = "slider"):
         super().__init__()
         self.main_layout = QHBoxLayout(self)
@@ -32,7 +34,12 @@ class Slider(QWidget):
         self.main_layout.addWidget(self.slider_name)
         self.main_layout.addWidget(self.slider_widget)
         # self.main_layout.addWidget(self.slider_value)
+
+        self.slider_widget.valueChanged.connect(self.emit_value_changed)
         
+    def emit_value_changed(self, value):
+        # Emit the custom signal with the slider value
+        self.valueChanged.emit(value)
         
 
         
