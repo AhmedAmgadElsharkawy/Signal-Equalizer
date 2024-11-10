@@ -13,7 +13,7 @@ class PlaybackButtonsController:
         if file_path:
             self.main_widnow.file_path = file_path
             self.plot_fourier_transform(file_path, 1, 0, 0)
-            self.set_all_sliders_to_one()            
+            self.set_all_sliders_to_one()
 
     def plot_fourier_transform(self, file_path, value, min_freq, max_freq):
         # Read the .wav file
@@ -37,7 +37,7 @@ class PlaybackButtonsController:
         magnitudes[freq_range_indices] *= value
         freqs_coeffs[freq_range_indices] *= value
         modified_data = np.fft.irfft(freqs_coeffs)
-        modified_data = modified_data / np.max(np.abs(modified_data))
+        voiced_modified_data = modified_data / np.max(np.abs(modified_data))
 
         self.main_widnow.frequency_domain_viewer.frequency_domain_plot.clear()
         self.main_widnow.input_cine_signal_viewer.cine_signal_plot.clear()

@@ -15,6 +15,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.file_path = None
+        self.isSyncing = False
         self.setWindowTitle('Sampling Theory Studio')
         self.setGeometry(100, 100, 1400, 900)
         self.main_widget = QWidget(self)
@@ -212,7 +213,10 @@ class MainWindow(QMainWindow):
         for slider_object in mode_sliders_list:
             slider = Slider(name=slider_object.slider_label, min_range_value=slider_object.min_freq, max_range_value=slider_object.max_freq)
             self.sliders_widget_layout.addWidget(slider)
+            slider.slider_widget.setValue(1)
             slider.valueChanged.connect(self.on_slider_value_changed)
+        if self.file_path:
+            self.buttons_controller.plot_fourier_transform(self.file_path, 1, 0, 0)
 
     def toggle_spectrograms(self,state):
         if state == Qt.Unchecked:
@@ -231,3 +235,38 @@ class MainWindow(QMainWindow):
         max_freq = sender_slider.max_range_value
 
         self.output_controller.sliderChanged(value, min_freq, max_freq)
+
+    def synchronize_input_graph(self):
+        if not self.isSyncing:
+            self.output_cine_signal_viewer.cine_signal_plot.sigXRangeChanged.disconnect(self.synchronize_output_graph)
+            self.output_cine_signal_viewer.cine_signal_plot.sigYRangeChanged.disconnect(self.synchronize_output_graph)
+                
+            # Set the X-axis range of graph2 based on graph1
+            xRange = self.input_cine_signal_viewer.cine_signal_plot.getViewBox().viewRange()[0]
+            yRange = self.input_cine_signal_viewer.cine_signal_plot.getViewBox().viewRange()[1]
+            self.isSyncing = True
+            self.output_cine_signal_viewer.cine_signal_plot.getViewBox().setXRange(*xRange)
+            self.output_cine_signal_viewer.cine_signal_plot.getViewBox().setYRange(*yRange)
+            self.isSyncing = False
+                
+            # Reconnect the signal
+            self.output_cine_signal_viewer.cine_signal_plot.sigXRangeChanged.connect(self.synchronize_output_graph)
+            self.output_cine_signal_viewer.cine_signal_plot.sigYRangeChanged.connect(self.synchronize_output_graph)
+
+    def synchronize_output_graph(self):
+        if not self.isSyncing:
+            self.input_cine_signal_viewer.cine_signal_plot.sigXRangeChanged.disconnect(self.synchronize_input_graph)
+            self.input_cine_signal_viewer.cine_signal_plot.sigYRangeChanged.disconnect(self.synchronize_input_graph)
+                
+            # Set the X-axis range of graph2 based on graph1
+            xRange = self.output_cine_signal_viewer.cine_signal_plot.getViewBox().viewRange()[0]
+            yRange = self.output_cine_signal_viewer.cine_signal_plot.getViewBox().viewRange()[1]
+            self.isSyncing = True
+            self.input_cine_signal_viewer.cine_signal_plot.getViewBox().setXRange(*xRange)
+            self.input_cine_signal_viewer.cine_signal_plot.getViewBox().setYRange(*yRange)
+            self.isSyncing = False
+            
+            # Reconnect the signal
+            self.input_cine_signal_viewer.cine_signal_plot.sigXRangeChanged.connect(self.synchronize_input_graph)
+            self.input_cine_signal_viewer.cine_signal_plot.sigYRangeChanged.connect(self.synchronize_input_graph)
+
