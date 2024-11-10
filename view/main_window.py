@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QComboBox, QScrollArea, QCheckBox, QButtonGroup, QRadioButton
+from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QComboBox, QScrollArea, QCheckBox, QButtonGroup, QRadioButton, QFileDialog
 from PyQt5.QtCore import Qt
 from view.slider import Slider
 from model.mode_frequencies import mode_sliders_data
@@ -9,6 +9,10 @@ from controller.mode_controller import ModeController
 from controller.output_controller import OutputController
 from controller.playback_buttons_controller import PlaybackButtonsController
 from controller.spectrogram_controller import SpectrogramController
+import numpy as np
+from scipy.fft import fft
+import pyqtgraph as pg
+from scipy.io import wavfile
 
 
 class MainWindow(QMainWindow):
@@ -55,6 +59,7 @@ class MainWindow(QMainWindow):
         self.clear_signal_button = QPushButton("clear")
         self.load_reset_widget_layout.addWidget(self.load_signal_button)
         self.load_reset_widget_layout.addWidget(self.clear_signal_button)
+        self.load_signal_button.clicked.connect(self.loadSignal)
         self.play_button = QPushButton("play")
         self.rewind_button = QPushButton("rewind")
         self.play_rewind_widget_layout.addWidget(self.play_button)
@@ -214,5 +219,31 @@ class MainWindow(QMainWindow):
         else:
             self.input_cine_signal_viewer.signal_spectrogram.setVisible(True)
             self.output_cine_signal_viewer.signal_spectrogram.setVisible(True)
+
+    def loadSignal(self):
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open .wav file", "", "Audio Files (*.wav)")
+        if file_path:
+            self.plot_fourier_transform(file_path)
+            
+
+    def plot_fourier_transform(self, file_path):
+        # Read the .wav file
+        sample_rate, data = wavfile.read(file_path)
+        x = np.arange(0, len(data)) / sample_rate  # Create the time axis
+        
+        # Use only one channel if stereo
+        if len(data.shape) > 1:
+            data = data[:, 0]
+        
+        # Fourier Transform
+        N = len(data)
+        T = 1.0 / sample_rate
+        yf = fft(data)
+        xf = np.fft.fftfreq(N, T)[:N//2]
+        magnitudes = 2.0 / N * np.abs(yf[:N // 2])
+        
+        # Plot the Fourier Transform
+        self.frequency_domain_viewer.frequency_domain_plot.plot(xf, magnitudes, pen=pg.mkPen(color=(170, 0, 0)))
+        self.input_cine_signal_viewer.cine_signal_plot.plot(x, data, pen=pg.mkPen(color=(170, 0, 0)))
 
 
