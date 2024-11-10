@@ -212,13 +212,20 @@ class MainWindow(QMainWindow):
             slider = Slider(name=slider_object.slider_label, min_range_value=0, max_range_value=10)
             self.sliders_widget_layout.addWidget(slider)
             slider.valueChanged.connect(self.on_slider_value_changed)
+
+    def set_all_sliders_to_one(self):
+        # Loop through all widgets in sliders_widget_layout
+        for i in range(self.sliders_widget_layout.count()):
+            widget = self.sliders_widget_layout.itemAt(i).widget()
             
+            # Check if the widget is an instance of your custom Slider class
+            if isinstance(widget, Slider):
+                # Set the slider value to 1
+                widget.slider_widget.setValue(1)
 
     def on_slider_value_changed(self, value):
         # This function will be called whenever a slider's value changes
         print(f"Slider value changed to {value}")
-        print(self)
-        # Add additional actions here
 
     def toggle_spectrograms(self,state):
         if state == Qt.Unchecked:
@@ -232,7 +239,7 @@ class MainWindow(QMainWindow):
         file_path, _ = QFileDialog.getOpenFileName(self, "Open .wav file", "", "Audio Files (*.wav)")
         if file_path:
             self.plot_fourier_transform(file_path)
-            
+            self.set_all_sliders_to_one()            
 
     def plot_fourier_transform(self, file_path):
         # Read the .wav file
