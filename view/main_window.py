@@ -119,7 +119,6 @@ class MainWindow(QMainWindow):
         self.controls_widget_layout.addWidget(self.frequency_plot_scale_widget)
         self.linear_scale_radio_button.setChecked(True)
 
-        self.load_mode_sliders()
 
         self.input_cine_signal_viewer = CineSignalViewer(self, "input")
         self.output_cine_signal_viewer = CineSignalViewer(self, "output")
@@ -141,6 +140,7 @@ class MainWindow(QMainWindow):
         self.output_controller = OutputController(self)
         self.buttons_controller = PlaybackButtonsController(self)
 
+        self.load_mode_sliders()
         self.load_signal_button.clicked.connect(self.buttons_controller.loadSignal)
 
         self.sliders_widget.verticalScrollBar().setStyleSheet("""
@@ -219,6 +219,13 @@ class MainWindow(QMainWindow):
         if self.signal.sample_rate:
             self.signal.signal_processing(1, 0, 0)
             self.buttons_controller.plot_the_signal()
+        
+        if mode == "ECG Abnormalities":
+            self.input_cine_signal_viewer.hide_sound_icons()
+            self.output_cine_signal_viewer.hide_sound_icons()
+        else:
+            self.input_cine_signal_viewer.show_sound_icons()
+            self.output_cine_signal_viewer.show_sound_icons()
 
     def toggle_spectrograms(self,state):
         if state == Qt.Unchecked:
