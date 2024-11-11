@@ -7,6 +7,8 @@ class FrequencyDomainController:
         self.current_scale = 'linear'
 
     def convert_to_db(self, magnitude):
+        if magnitude == 0:
+            return - np.inf
         return 20 * np.log10(magnitude)
 
     def plot_freq_domain(self, freqs, magnitudes, scale=None):
