@@ -68,12 +68,12 @@ class PlaybackButtonsController:
         # Wait until the file is done playing return output_file_path
 
     def play_signal(self):
-        self.signal_speed = 64
+        self.signal_speed = 128
         self.timer.start(self.signal_speed)
 
     def update_plot(self):
         self.main_window.input_cine_signal_viewer.cine_signal_plot.setXRange(self.pointer - 0.1, self.pointer)
-        self.pointer += 0.05
+        self.pointer += 0.01
         if self.pointer >= self.main_window.signal.time[-1]:
             self.timer.stop()
             self.pointer = 0.1
@@ -81,4 +81,10 @@ class PlaybackButtonsController:
     def rewind_signal(self):
         self.timer.stop()
         self.pointer = 0.1
+        self.timer.start(self.signal_speed)
+
+    def increase_signal_speed(self):
+        self.timer.stop()
+        if self.signal_speed > 32 :
+            self.signal_speed = int(self.signal_speed // 2)
         self.timer.start(self.signal_speed)
