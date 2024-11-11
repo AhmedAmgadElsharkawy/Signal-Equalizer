@@ -88,3 +88,9 @@ class PlaybackButtonsController:
         if self.signal_speed > 32 :
             self.signal_speed = int(self.signal_speed // 2)
         self.timer.start(self.signal_speed)
+
+    def decrease_signal_speed(self):
+        self.timer.stop()
+        if self.signal_speed < 256 :
+            self.signal_speed = int(self.signal_speed * 2)
+        self.timer.start(self.signal_speed)

@@ -146,6 +146,7 @@ class MainWindow(QMainWindow):
         self.play_and_pause_button.clicked.connect(self.buttons_controller.play_signal)
         self.rewind_button.clicked.connect(self.buttons_controller.rewind_signal)
         self.speed_up_button.clicked.connect(self.buttons_controller.increase_signal_speed)
+        self.speed_down_button.clicked.connect(self.buttons_controller.decrease_signal_speed)
 
         self.sliders_widget.verticalScrollBar().setStyleSheet("""
             QScrollBar:vertical {
