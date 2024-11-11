@@ -4,9 +4,16 @@ import numpy as np
 import pyqtgraph as pg
 from scipy.io import wavfile
 import sounddevice as sd
+from PyQt5.QtCore import QTimer
 class PlaybackButtonsController:
     def __init__(self,main_window):
         self.main_window = main_window
+        self.timer = QTimer()
+        self.pointer = 0.1
+        self.signal_speed = 5
+
+        # Connect the timer to the function you want to call
+        self.timer.timeout.connect(self.update_plot)
 
     def loadSignal(self):
         file_path, _ = QFileDialog.getOpenFileName(self.main_window, "Open .wav file", "", "Audio Files (*.wav)")
@@ -59,3 +66,19 @@ class PlaybackButtonsController:
         sd.wait() 
         return output_file_path
         # Wait until the file is done playing return output_file_path
+
+    def play_signal(self):
+        self.signal_speed = 64
+        self.timer.start(self.signal_speed)
+
+    def update_plot(self):
+        self.main_window.input_cine_signal_viewer.cine_signal_plot.setXRange(self.pointer - 0.1, self.pointer)
+        self.pointer += 0.05
+        if self.pointer >= self.main_window.signal.time[-1]:
+            self.timer.stop()
+            self.pointer = 0.1
+    
+    def rewind_signal(self):
+        self.timer.stop()
+        self.pointer = 0.1
+        self.timer.start(self.signal_speed)
