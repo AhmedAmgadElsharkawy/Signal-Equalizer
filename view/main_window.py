@@ -136,10 +136,10 @@ class MainWindow(QMainWindow):
         self.mode_combobox.currentIndexChanged.connect(self.load_mode_sliders)
 
         self.mode_controller = ModeController(self)
-        self.buttons_controller = PlaybackButtonsController(self)
         self.spectrogram_controller = SpectrogramController(self)
         self.frequency_domain_controller = FrequencyDomainController(self)
         self.output_controller = OutputController(self)
+        self.buttons_controller = PlaybackButtonsController(self)
 
         self.load_signal_button.clicked.connect(self.buttons_controller.loadSignal)
 

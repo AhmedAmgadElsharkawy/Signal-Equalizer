@@ -17,13 +17,14 @@ class PlaybackButtonsController:
             self.set_all_sliders_to_one()
 
     def plot_the_signal(self):
-        self.main_widnow.frequency_domain_viewer.frequency_domain_plot.clear()
         self.main_widnow.input_cine_signal_viewer.cine_signal_plot.clear()
         self.main_widnow.output_cine_signal_viewer.cine_signal_plot.clear()
-
+        # self.main_widnow.frequency_domain_viewer.frequency_domain_plot.clear()
+        self.main_widnow.frequency_domain_controller.plot_freq_domain()
+        self.main_widnow.spectrogram_controller.plot_spectrogram()
         self.main_widnow.input_cine_signal_viewer.cine_signal_plot.plot(self.main_widnow.signal.time, self.main_widnow.signal.data, pen=pg.mkPen(color=(170, 0, 0)))
         self.main_widnow.output_cine_signal_viewer.cine_signal_plot.plot(self.main_widnow.signal.time, self.main_widnow.signal.modified_data, pen=pg.mkPen(color=(170, 0, 0)))
-        self.main_widnow.frequency_domain_viewer.frequency_domain_plot.plot(self.main_widnow.signal.freqs, self.main_widnow.signal.magnitudes, pen=pg.mkPen(color=(170, 0, 0)))
+        # self.main_widnow.frequency_domain_viewer.frequency_domain_plot.plot(self.main_widnow.signal.freqs, self.main_widnow.signal.magnitudes, pen=pg.mkPen(color=(170, 0, 0)))
 
     def set_all_sliders_to_one(self):
         # Loop through all widgets in sliders_widget_layout

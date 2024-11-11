@@ -20,6 +20,3 @@ class OutputController:
         sd.wait() 
         return output_file_path
         # Wait until the file is done playing return output_file_path
-
-    def calc(self):
-        pass
