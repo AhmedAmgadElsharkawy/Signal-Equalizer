@@ -67,7 +67,6 @@ class CineSignalViewer(QWidget):
             # self.cine_signal_plot.scene().removeItem(self.unmuted_sound_icon_item)
             # self.cine_signal_plot.scene().addItem(self.muted_sound_icon_item)
             self.stop_plot_sound()
-            print("wrong")
         else:
             # self.cine_signal_plot.scene().removeItem(self.muted_sound_icon_item)
             # self.cine_signal_plot.scene().addItem(self.unmuted_sound_icon_item)
