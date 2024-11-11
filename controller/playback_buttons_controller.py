@@ -23,6 +23,7 @@ class PlaybackButtonsController:
                 self.plot_the_signal()
             self.set_all_sliders_to_one()
             self.main_widnow.update_sound_icons()
+            self.main_widnow.update_sliders_and_mode_state(True)
 
 
     def plot_the_signal(self):

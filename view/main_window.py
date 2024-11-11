@@ -142,6 +142,7 @@ class MainWindow(QMainWindow):
 
         self.load_mode_sliders()
         self.load_signal_button.clicked.connect(self.buttons_controller.loadSignal)
+        self.update_sliders_and_mode_state(False)
 
         self.sliders_widget.verticalScrollBar().setStyleSheet("""
             QScrollBar:vertical {
@@ -221,6 +222,14 @@ class MainWindow(QMainWindow):
             self.buttons_controller.plot_the_signal()
         
         self.update_sound_icons()
+
+    def update_sliders_and_mode_state(self,state):
+        if len(self.signal.time) == 0:
+            state = False
+        self.mode_combobox.setEnabled(state)
+        for i in range(self.sliders_widget_layout.count()):
+            widget = self.sliders_widget_layout.itemAt(i).widget()
+            widget.setEnabled(state)
         
     def update_sound_icons(self):
         if len(self.signal.time) == 0 or self.signal.file_extension != ".wav":
