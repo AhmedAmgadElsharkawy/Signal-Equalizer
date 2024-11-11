@@ -7,9 +7,12 @@ class Signal:
         self.sample_rate = None
         self.data = []
         self.time = []
-        self.freqs_coeffs = []
+        self.freq_coeffs = []
+        self.static_freq_coeffs = []
         self.freqs = []
         self.modified_data = []
+        self.magnitudes = []
+        self.static_magnitudes = []
         self.sound_data = []
         self.freq_range_indices = []
         self.N = None
@@ -26,18 +29,20 @@ class Signal:
         # Fourier Transform
         self.N = len(self.data)
         self.T = 1.0 / self.sample_rate
-        self.freqs_coeffs = np.fft.rfft(self.data)
+        self.freq_coeffs = np.fft.rfft(self.data)
+        self.static_freq_coeffs = self.freq_coeffs.copy()
         self.freqs = np.fft.rfftfreq(self.N, self.T)
-        self.magnitudes = 10 / self.N * np.abs(self.freqs_coeffs)
+        self.magnitudes = 10 / self.N * np.abs(self.freq_coeffs)
+        self.static_magnitudes = self.magnitudes.copy()
         self.signal_processing(1, 0, 0)
 
     def signal_processing(self, value, min_freq, max_freq):
         self.freq_range_indices = np.where((self.freqs >= min_freq) & (self.freqs <= max_freq))
         if value > 1:
             value = 1 + value / 10
-        self.magnitudes[self.freq_range_indices] *= value
-        self.freqs_coeffs[self.freq_range_indices] *= value
-        self.modified_data = np.fft.irfft(self.freqs_coeffs)
+        self.magnitudes[self.freq_range_indices] = self.static_magnitudes[self.freq_range_indices] * value
+        self.freq_coeffs[self.freq_range_indices] = self.static_freq_coeffs[self.freq_range_indices] * value
+        self.modified_data = np.fft.irfft(self.freq_coeffs)
         self.sound_data = self.modified_data / np.max(np.abs(self.modified_data)) 
 
     def save_and_play_wav(self, main_file, modified_data, sample_rate): 
