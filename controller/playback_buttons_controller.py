@@ -4,16 +4,23 @@ import numpy as np
 import pyqtgraph as pg
 from scipy.io import wavfile
 import sounddevice as sd
+import os
 class PlaybackButtonsController:
     def __init__(self,main_window):
         self.main_widnow = main_window
 
     def loadSignal(self):
-        file_path, _ = QFileDialog.getOpenFileName(self.main_widnow, "Open .wav file", "", "Audio Files (*.wav)")
+        file_path, _ = QFileDialog.getOpenFileName(self.main_widnow, "Open .wav or .csv file", "", "*.csv *.wav")
+        
         if file_path:
             self.main_widnow.file_path = file_path
-            self.main_widnow.signal.calculate_data(file_path)
-            self.plot_the_signal()
+            file_extension = os.path.splitext(file_path)[1].lower()
+            if file_extension == ".wav":
+                self.main_widnow.signal.load_wav_data(file_path)  # Assumes this processes .wav files
+                self.plot_the_signal()
+            elif file_extension == ".csv":
+                self.main_widnow.signal.load_csv_data(file_path)  
+                self.plot_the_signal()
             self.set_all_sliders_to_one()
 
     def plot_the_signal(self):
