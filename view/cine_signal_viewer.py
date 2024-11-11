@@ -46,7 +46,7 @@ class CineSignalViewer(QWidget):
         self.signal_spectrogram = FigureCanvas(self.spectrogram_figure)
         self.main_layout.addWidget(self.signal_spectrogram)
 
-        self.spectrogram_figure.subplots_adjust(left=0.07, right=0.95, top=0.95, bottom=0.1)
+        self.spectrogram_figure.subplots_adjust(left=0.12, right=0.95, top=0.95, bottom=0.12)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
