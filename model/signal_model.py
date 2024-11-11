@@ -21,7 +21,8 @@ class Signal:
         self.freq_range_indices = []
         self.N = None
         self.T = None
-
+        self.min_data_point = None
+        self.max_data_point = None
 
     def load_csv_data(self, file_path,file_extension):
         self.file_path = file_path
@@ -34,6 +35,7 @@ class Signal:
         self.sample_rate = int(math.ceil(1/(self.time[1]-self.time[0])))
         self.calculate_data()
 
+
     def load_wav_data(self,file_path,file_extension):
         self.file_path = file_path
         self.file_extension = file_extension
@@ -41,11 +43,17 @@ class Signal:
         self.time = np.arange(0, len(self.data)) / self.sample_rate
         self.calculate_data()
 
-
     def calculate_data(self):
         # Use only one channel if stereo
         if len(self.data.shape) > 1:
             self.data = self.data[:, 0]
+        
+        self.min_data_point = self.data[0]
+        self.max_data_point = self.data[0]
+
+        for point in self.data:
+            self.min_data_point = int(min(self.min_data_point, point))
+            self.max_data_point = int(max(self.max_data_point, point))
         
         # Fourier Transform
         self.N = len(self.data)
@@ -82,3 +90,22 @@ class Signal:
 
     def stop_sound(self):
         sd.stop()
+
+    def clear_signal(self):
+        self.file_path = None
+        self.sample_rate = None
+        self.data = []
+        self.time = []
+        self.freq_coeffs = []
+        self.static_freq_coeffs = []
+        self.freqs = []
+        self.modified_data = []
+        self.magnitudes = []
+        self.static_magnitudes = []
+        self.sound_data = []
+        self.freq_range_indices = []
+        self.N = None
+        self.T = None
+        self.min_data_point = None
+        self.max_data_point = None
+

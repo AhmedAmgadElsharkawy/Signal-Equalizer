@@ -58,9 +58,9 @@ class MainWindow(QMainWindow):
         self.clear_signal_button = QPushButton("clear")
         self.load_reset_widget_layout.addWidget(self.load_signal_button)
         self.load_reset_widget_layout.addWidget(self.clear_signal_button)
-        self.play_button = QPushButton("play")
+        self.play_and_pause_button = QPushButton("play")
         self.rewind_button = QPushButton("rewind")
-        self.play_rewind_widget_layout.addWidget(self.play_button)
+        self.play_rewind_widget_layout.addWidget(self.play_and_pause_button)
         self.play_rewind_widget_layout.addWidget(self.rewind_button)
         self.speed_up_button = QPushButton("speed up")
         self.speed_down_button = QPushButton("speed down")
@@ -143,6 +143,11 @@ class MainWindow(QMainWindow):
         self.load_mode_sliders()
         self.load_signal_button.clicked.connect(self.buttons_controller.loadSignal)
         self.update_sliders_and_mode_state(False)
+        self.clear_signal_button.clicked.connect(self.buttons_controller.clearSignal)
+        self.play_and_pause_button.clicked.connect(self.buttons_controller.play_and_pause_signal)
+        self.rewind_button.clicked.connect(self.buttons_controller.rewind_signal)
+        self.speed_up_button.clicked.connect(self.buttons_controller.increase_signal_speed)
+        self.speed_down_button.clicked.connect(self.buttons_controller.decrease_signal_speed)
 
         self.sliders_widget.verticalScrollBar().setStyleSheet("""
             QScrollBar:vertical {
