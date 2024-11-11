@@ -11,6 +11,7 @@ class PlaybackButtonsController:
         self.timer = QTimer()
         self.pointer = 0.1
         self.signal_speed = 128
+        self.is_playing = False
 
         # Connect the timer to the function you want to call
         self.timer.timeout.connect(self.update_plot)
@@ -30,7 +31,8 @@ class PlaybackButtonsController:
 
     def clearSignal(self):
         self.main_window.signal.clear_signal()
-        self.timer.stop()
+        self.is_playing = True
+        self.play_and_pause_signal()
         self.pointer = 0.1
         self.signal_speed = 128
         
@@ -72,9 +74,16 @@ class PlaybackButtonsController:
         return output_file_path
         # Wait until the file is done playing return output_file_path
 
-    def play_signal(self):
-        self.signal_speed = 128
-        self.timer.start(self.signal_speed)
+    def play_and_pause_signal(self):
+        if self.is_playing:
+            self.timer.stop()
+            self.is_playing = False
+            self.main_window.play_and_pause_button.setText("Play")
+        else:
+            self.is_playing = True
+            self.main_window.play_and_pause_button.setText("Pause")
+            self.signal_speed = 128
+            self.timer.start(self.signal_speed)
 
     def update_plot(self):
         self.main_window.input_cine_signal_viewer.cine_signal_plot.setXRange(self.pointer - 0.1, self.pointer)
@@ -82,11 +91,13 @@ class PlaybackButtonsController:
         if self.pointer >= self.main_window.signal.time[-1]:
             self.timer.stop()
             self.pointer = 0.1
+            self.play_and_pause_signal()
     
     def rewind_signal(self):
         self.timer.stop()
         self.pointer = 0.1
-        self.timer.start(self.signal_speed)
+        self.is_playing = False
+        self.play_and_pause_signal()
 
     def increase_signal_speed(self):
         self.timer.stop()

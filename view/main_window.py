@@ -143,7 +143,7 @@ class MainWindow(QMainWindow):
 
         self.load_signal_button.clicked.connect(self.buttons_controller.loadSignal)
         self.clear_signal_button.clicked.connect(self.buttons_controller.clearSignal)
-        self.play_and_pause_button.clicked.connect(self.buttons_controller.play_signal)
+        self.play_and_pause_button.clicked.connect(self.buttons_controller.play_and_pause_signal)
         self.rewind_button.clicked.connect(self.buttons_controller.rewind_signal)
         self.speed_up_button.clicked.connect(self.buttons_controller.increase_signal_speed)
         self.speed_down_button.clicked.connect(self.buttons_controller.decrease_signal_speed)
