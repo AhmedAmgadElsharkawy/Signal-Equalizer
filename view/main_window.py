@@ -220,7 +220,10 @@ class MainWindow(QMainWindow):
             self.signal.signal_processing(1, 0, 0)
             self.buttons_controller.plot_the_signal()
         
-        if mode == "ECG Abnormalities":
+        self.update_sound_icons()
+        
+    def update_sound_icons(self):
+        if len(self.signal.time) == 0 or self.signal.file_extension != ".wav":
             self.input_cine_signal_viewer.hide_sound_icons()
             self.output_cine_signal_viewer.hide_sound_icons()
         else:

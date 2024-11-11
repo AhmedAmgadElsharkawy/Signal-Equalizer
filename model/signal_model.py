@@ -7,6 +7,7 @@ import math
 class Signal:
     def __init__(self):
         self.file_path = None
+        self.file_extension = None
         self.sample_rate = None
         self.data = []
         self.time = []
@@ -22,19 +23,20 @@ class Signal:
         self.T = None
 
 
-    def load_csv_data(self, file_path):
+    def load_csv_data(self, file_path,file_extension):
         self.file_path = file_path
+        self.file_extension = file_extension
         self.data = pd.read_csv(file_path)
         self.data = self.data.to_numpy()
         file_data = pd.read_csv(file_path).iloc[:,0:2]
         self.time = file_data.iloc[:,0]
         self.data = file_data.iloc[:,1]
         self.sample_rate = int(math.ceil(1/(self.time[1]-self.time[0])))
-        print(self.sample_rate)
         self.calculate_data()
 
-    def load_wav_data(self,file_path):
+    def load_wav_data(self,file_path,file_extension):
         self.file_path = file_path
+        self.file_extension = file_extension
         self.sample_rate, self.data = wavfile.read(file_path)
         self.time = np.arange(0, len(self.data)) / self.sample_rate
         self.calculate_data()

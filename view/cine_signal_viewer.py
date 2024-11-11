@@ -89,5 +89,7 @@ class CineSignalViewer(QWidget):
     def show_sound_icons(self):
         self.muted_sound_icon_item.setVisible(True)
         self.unmuted_sound_icon_item.setVisible(False)
+        self.main_window.signal.stop_sound()
+
         
 

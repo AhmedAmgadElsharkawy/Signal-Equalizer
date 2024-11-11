@@ -16,12 +16,14 @@ class PlaybackButtonsController:
             self.main_widnow.file_path = file_path
             file_extension = os.path.splitext(file_path)[1].lower()
             if file_extension == ".wav":
-                self.main_widnow.signal.load_wav_data(file_path)  # Assumes this processes .wav files
+                self.main_widnow.signal.load_wav_data(file_path,file_extension)  # Assumes this processes .wav files
                 self.plot_the_signal()
             elif file_extension == ".csv":
-                self.main_widnow.signal.load_csv_data(file_path)  
+                self.main_widnow.signal.load_csv_data(file_path,file_extension)  
                 self.plot_the_signal()
             self.set_all_sliders_to_one()
+            self.main_widnow.update_sound_icons()
+
 
     def plot_the_signal(self):
         self.main_widnow.input_cine_signal_viewer.cine_signal_plot.clear()
