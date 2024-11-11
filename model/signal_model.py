@@ -1,9 +1,13 @@
 import numpy as np
 from scipy.io import wavfile
 import sounddevice as sd
+import pandas as pd
+import math
+
 class Signal:
     def __init__(self):
         self.file_path = None
+        self.file_extension = None
         self.sample_rate = None
         self.data = []
         self.time = []
@@ -17,14 +21,39 @@ class Signal:
         self.freq_range_indices = []
         self.N = None
         self.T = None
+        self.min_data_point = None
+        self.max_data_point = None
 
-    def calculate_data(self, file_path):
+    def load_csv_data(self, file_path,file_extension):
         self.file_path = file_path
+        self.file_extension = file_extension
+        self.data = pd.read_csv(file_path)
+        self.data = self.data.to_numpy()
+        file_data = pd.read_csv(file_path).iloc[:,0:2]
+        self.time = file_data.iloc[:,0]
+        self.data = file_data.iloc[:,1]
+        self.sample_rate = int(math.ceil(1/(self.time[1]-self.time[0])))
+        self.calculate_data()
+
+
+    def load_wav_data(self,file_path,file_extension):
+        self.file_path = file_path
+        self.file_extension = file_extension
         self.sample_rate, self.data = wavfile.read(file_path)
-        self.time = np.arange(0, len(self.data)) / self.sample_rate  # Create the time axis
+        self.time = np.arange(0, len(self.data)) / self.sample_rate
+        self.calculate_data()
+
+    def calculate_data(self):
         # Use only one channel if stereo
         if len(self.data.shape) > 1:
             self.data = self.data[:, 0]
+        
+        self.min_data_point = self.data[0]
+        self.max_data_point = self.data[0]
+
+        for point in self.data:
+            self.min_data_point = float(min(self.min_data_point, point))
+            self.max_data_point = float(max(self.max_data_point, point))
         
         # Fourier Transform
         self.N = len(self.data)
@@ -61,4 +90,22 @@ class Signal:
 
     def stop_sound(self):
         sd.stop()
+
+    def clear_signal(self):
+        self.file_path = None
+        self.sample_rate = None
+        self.data = []
+        self.time = []
+        self.freq_coeffs = []
+        self.static_freq_coeffs = []
+        self.freqs = []
+        self.modified_data = []
+        self.magnitudes = []
+        self.static_magnitudes = []
+        self.sound_data = []
+        self.freq_range_indices = []
+        self.N = None
+        self.T = None
+        self.min_data_point = None
+        self.max_data_point = None
 

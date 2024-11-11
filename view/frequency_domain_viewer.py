@@ -1,7 +1,6 @@
 import pyqtgraph as pg
 from PyQt5.QtWidgets import (QWidget, QHBoxLayout)
 
-
 class FrequencyDomainViewer(QWidget):
     def __init__(self):
         super().__init__()

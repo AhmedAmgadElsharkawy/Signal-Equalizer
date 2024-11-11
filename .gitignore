@@ -16,6 +16,8 @@ __pycache__/
 # Temporary files
 *.tmp
 *.temp
+tempCodeRunnerFile.python
+modified_input.wav
 
 # IDE-specific settings
 *.sublime-workspace

@@ -58,9 +58,9 @@ class MainWindow(QMainWindow):
         self.clear_signal_button = QPushButton("clear")
         self.load_reset_widget_layout.addWidget(self.load_signal_button)
         self.load_reset_widget_layout.addWidget(self.clear_signal_button)
-        self.play_button = QPushButton("play")
+        self.play_and_pause_button = QPushButton("play")
         self.rewind_button = QPushButton("rewind")
-        self.play_rewind_widget_layout.addWidget(self.play_button)
+        self.play_rewind_widget_layout.addWidget(self.play_and_pause_button)
         self.play_rewind_widget_layout.addWidget(self.rewind_button)
         self.speed_up_button = QPushButton("speed up")
         self.speed_down_button = QPushButton("speed down")
@@ -120,7 +120,6 @@ class MainWindow(QMainWindow):
         self.linear_scale_radio_button.setChecked(True)
         
 
-        self.load_mode_sliders()
 
         self.input_cine_signal_viewer = CineSignalViewer(self, "input")
         self.output_cine_signal_viewer = CineSignalViewer(self, "output")
@@ -146,7 +145,14 @@ class MainWindow(QMainWindow):
         self.audiogram_scale_radio_button.toggled.connect(self.switch_frequency_scale)
 
 
+        self.load_mode_sliders()
         self.load_signal_button.clicked.connect(self.buttons_controller.loadSignal)
+        self.update_sliders_and_mode_state(False)
+        self.clear_signal_button.clicked.connect(self.buttons_controller.clearSignal)
+        self.play_and_pause_button.clicked.connect(self.buttons_controller.play_and_pause_signal)
+        self.rewind_button.clicked.connect(self.buttons_controller.rewind_signal)
+        self.speed_up_button.clicked.connect(self.buttons_controller.increase_signal_speed)
+        self.speed_down_button.clicked.connect(self.buttons_controller.decrease_signal_speed)
 
         self.sliders_widget.verticalScrollBar().setStyleSheet("""
             QScrollBar:vertical {
@@ -235,6 +241,24 @@ class MainWindow(QMainWindow):
         if self.signal.sample_rate:
             self.signal.signal_processing(1, 0, 0)
             self.buttons_controller.plot_the_signal()
+        
+        self.update_sound_icons()
+
+    def update_sliders_and_mode_state(self,state):
+        if len(self.signal.time) == 0:
+            state = False
+        self.mode_combobox.setEnabled(state)
+        for i in range(self.sliders_widget_layout.count()):
+            widget = self.sliders_widget_layout.itemAt(i).widget()
+            widget.setEnabled(state)
+        
+    def update_sound_icons(self):
+        if len(self.signal.time) == 0 or self.signal.file_extension != ".wav":
+            self.input_cine_signal_viewer.hide_sound_icons()
+            self.output_cine_signal_viewer.hide_sound_icons()
+        else:
+            self.input_cine_signal_viewer.show_sound_icons()
+            self.output_cine_signal_viewer.show_sound_icons()
 
     def toggle_spectrograms(self,state):
         if state == Qt.Unchecked:
@@ -288,3 +312,8 @@ class MainWindow(QMainWindow):
             self.input_cine_signal_viewer.cine_signal_plot.sigXRangeChanged.connect(self.synchronize_input_graph)
             self.input_cine_signal_viewer.cine_signal_plot.sigYRangeChanged.connect(self.synchronize_input_graph)
 
+    def toggle_plots_played_sound(self,name_of_caller_plot):
+        if(name_of_caller_plot == "input"):
+            self.output_cine_signal_viewer.stop_plot_sound()
+        else:
+            self.input_cine_signal_viewer.stop_plot_sound()
