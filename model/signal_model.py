@@ -52,8 +52,8 @@ class Signal:
         self.max_data_point = self.data[0]
 
         for point in self.data:
-            self.min_data_point = int(min(self.min_data_point, point))
-            self.max_data_point = int(max(self.max_data_point, point))
+            self.min_data_point = float(min(self.min_data_point, point))
+            self.max_data_point = float(max(self.max_data_point, point))
         
         # Fourier Transform
         self.N = len(self.data)

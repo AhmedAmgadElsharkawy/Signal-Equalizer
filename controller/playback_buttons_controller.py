@@ -10,7 +10,7 @@ class PlaybackButtonsController:
     def __init__(self,main_window):
         self.main_window = main_window
         self.timer = QTimer()
-        self.pointer = 0.1
+        self.pointer = 0.3
         self.signal_speed = 128
         self.is_playing = False
 
@@ -34,16 +34,16 @@ class PlaybackButtonsController:
             self.main_window.update_sound_icons()
             self.main_window.update_sliders_and_mode_state(True)
 
-            # self.main_window.input_cine_signal_viewer.cine_signal_plot.setLimits(xMin=0, xMax=self.main_window.signal.time[-1], yMin=self.main_window.signal.min_data_point, yMax=self.main_window.signal.max_data_point)
-            # self.main_window.output_cine_signal_viewer.cine_signal_plot.setLimits(xMin=0, xMax=self.main_window.signal.time[-1], yMin=self.main_window.signal.min_data_point, yMax=self.main_window.signal.max_data_point)
-            # self.main_window.input_cine_signal_viewer.cine_signal_plot.setXRange(0, self.main_window.signal.time[-1])
-            # self.main_window.output_cine_signal_viewer.cine_signal_plot.setXRange(0, self.main_window.signal.time[-1])
+            self.main_window.input_cine_signal_viewer.cine_signal_plot.setLimits(xMin=0, xMax=self.main_window.signal.time[len(self.main_window.signal.time)-1], yMin=self.main_window.signal.min_data_point, yMax=self.main_window.signal.max_data_point)
+            self.main_window.output_cine_signal_viewer.cine_signal_plot.setLimits(xMin=0, xMax=self.main_window.signal.time[len(self.main_window.signal.time)-1], yMin=self.main_window.signal.min_data_point, yMax=self.main_window.signal.max_data_point)
+            self.main_window.input_cine_signal_viewer.cine_signal_plot.setXRange(0, self.main_window.signal.time[len(self.main_window.signal.time)-1])
+            self.main_window.input_cine_signal_viewer.cine_signal_plot.setYRange(self.main_window.signal.min_data_point, self.main_window.signal.max_data_point)
 
     def clearSignal(self):
         self.main_window.signal.clear_signal()
         self.is_playing = True
         self.play_and_pause_signal()
-        self.pointer = 0.1
+        self.pointer = 0.3
         self.signal_speed = 128
         
         self.main_window.input_cine_signal_viewer.cine_signal_plot.clear()
@@ -96,16 +96,16 @@ class PlaybackButtonsController:
             self.timer.start(self.signal_speed)
 
     def update_plot(self):
-        self.main_window.input_cine_signal_viewer.cine_signal_plot.setXRange(self.pointer - 0.1, self.pointer)
+        self.main_window.input_cine_signal_viewer.cine_signal_plot.setXRange(self.pointer - 0.3, self.pointer)
         self.pointer += 0.01
-        if self.pointer >= self.main_window.signal.time[-1]:
+        if self.pointer >= self.main_window.signal.time[len(self.main_window.signal.time) - 1]:
             self.timer.stop()
-            self.pointer = 0.1
+            self.pointer = 0.3
             self.play_and_pause_signal()
     
     def rewind_signal(self):
         self.timer.stop()
-        self.pointer = 0.1
+        self.pointer = 0.3
         self.is_playing = False
         self.play_and_pause_signal()
 
