@@ -19,12 +19,20 @@ class PlaybackButtonsController:
     def plot_the_signal(self):
         self.main_widnow.input_cine_signal_viewer.cine_signal_plot.clear()
         self.main_widnow.output_cine_signal_viewer.cine_signal_plot.clear()
-        # self.main_widnow.frequency_domain_viewer.frequency_domain_plot.clear()
-        self.main_widnow.frequency_domain_controller.plot_freq_domain()
-        self.main_widnow.spectrogram_controller.plot_spectrogram()
+        self.main_widnow.frequency_domain_viewer.frequency_domain_plot.clear()
+        
+        # Update frequency domain plot based on current scale selection
+        is_linear = self.main_widnow.linear_scale_radio_button.isChecked()
+        self.main_widnow.switch_frequency_scale()
+        
+        freqs, magnitudes = self.main_widnow.signal.freqs, self.main_widnow.signal.magnitudes
+        # Use current scale selection instead of defaulting to linear
+        scale = 'audiogram' if self.main_widnow.audiogram_scale_radio_button.isChecked() else 'linear'
+        self.main_widnow.frequency_domain_controller.plot_freq_domain(freqs, magnitudes, scale)        
         self.main_widnow.input_cine_signal_viewer.cine_signal_plot.plot(self.main_widnow.signal.time, self.main_widnow.signal.data, pen=pg.mkPen(color=(170, 0, 0)))
         self.main_widnow.output_cine_signal_viewer.cine_signal_plot.plot(self.main_widnow.signal.time, self.main_widnow.signal.modified_data, pen=pg.mkPen(color=(170, 0, 0)))
         # self.main_widnow.frequency_domain_viewer.frequency_domain_plot.plot(self.main_widnow.signal.freqs, self.main_widnow.signal.magnitudes, pen=pg.mkPen(color=(170, 0, 0)))
+
 
     def set_all_sliders_to_one(self):
         # Loop through all widgets in sliders_widget_layout

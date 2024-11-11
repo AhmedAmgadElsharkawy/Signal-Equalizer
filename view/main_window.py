@@ -118,6 +118,7 @@ class MainWindow(QMainWindow):
         self.frequency_plot_scale_widget_layout.addWidget(self.audiogram_scale_radio_button)
         self.controls_widget_layout.addWidget(self.frequency_plot_scale_widget)
         self.linear_scale_radio_button.setChecked(True)
+        
 
         self.load_mode_sliders()
 
@@ -140,6 +141,10 @@ class MainWindow(QMainWindow):
         self.frequency_domain_controller = FrequencyDomainController(self)
         self.output_controller = OutputController(self)
         self.buttons_controller = PlaybackButtonsController(self)
+        
+        self.linear_scale_radio_button.toggled.connect(self.switch_frequency_scale)
+        self.audiogram_scale_radio_button.toggled.connect(self.switch_frequency_scale)
+
 
         self.load_signal_button.clicked.connect(self.buttons_controller.loadSignal)
 
@@ -202,6 +207,17 @@ class MainWindow(QMainWindow):
                 border-radius:15px;
             }
         """)
+        
+    def switch_frequency_scale(self):
+        if self.signal.freqs is not None and len(self.signal.freqs) > 0:
+            is_linear = self.linear_scale_radio_button.isChecked()
+            scale = 'linear' if is_linear else 'audiogram'
+            self.frequency_domain_controller.plot_freq_domain(
+                self.signal.freqs,
+                self.signal.magnitudes,
+                scale
+            )
+
 
     def load_mode_sliders(self):
         for i in reversed(range(self.sliders_widget_layout.count())):
