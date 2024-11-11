@@ -15,8 +15,8 @@ class PlaybackButtonsController:
             self.main_window.signal.calculate_data(file_path)
             self.plot_the_signal()
             self.set_all_sliders_to_one()
-            self.main_window.input_cine_signal_viewer.cine_signal_plot.setLimits(xMin=0, xMax=self.main_window.signal.time[-1])
-            self.main_window.output_cine_signal_viewer.cine_signal_plot.setLimits(xMin=0, xMax=self.main_window.signal.time[-1])
+            self.main_window.input_cine_signal_viewer.cine_signal_plot.setLimits(xMin=0, xMax=self.main_window.signal.time[-1], yMin=self.main_window.signal.min_data_point, yMax=self.main_window.signal.max_data_point)
+            self.main_window.output_cine_signal_viewer.cine_signal_plot.setLimits(xMin=0, xMax=self.main_window.signal.time[-1], yMin=self.main_window.signal.min_data_point, yMax=self.main_window.signal.max_data_point)
 
     def clearSignal(self):
         self.main_window.signal.clear_signal()

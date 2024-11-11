@@ -17,6 +17,8 @@ class Signal:
         self.freq_range_indices = []
         self.N = None
         self.T = None
+        self.min_data_point = None
+        self.max_data_point = None
 
     def calculate_data(self, file_path):
         self.file_path = file_path
@@ -25,6 +27,13 @@ class Signal:
         # Use only one channel if stereo
         if len(self.data.shape) > 1:
             self.data = self.data[:, 0]
+        
+        self.min_data_point = self.data[0]
+        self.max_data_point = self.data[0]
+
+        for point in self.data:
+            self.min_data_point = int(min(self.min_data_point, point))
+            self.max_data_point = int(max(self.max_data_point, point))
         
         # Fourier Transform
         self.N = len(self.data)
@@ -77,4 +86,6 @@ class Signal:
         self.freq_range_indices = []
         self.N = None
         self.T = None
+        self.min_data_point = None
+        self.max_data_point = None
 
