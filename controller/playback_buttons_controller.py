@@ -10,12 +10,13 @@ class PlaybackButtonsController:
         self.main_window = main_window
         self.timer = QTimer()
         self.pointer = 0.1
-        self.signal_speed = 5
+        self.signal_speed = 128
 
         # Connect the timer to the function you want to call
         self.timer.timeout.connect(self.update_plot)
 
     def loadSignal(self):
+        self.clearSignal()
         file_path, _ = QFileDialog.getOpenFileName(self.main_window, "Open .wav file", "", "Audio Files (*.wav)")
         if file_path:
             self.main_window.file_path = file_path
@@ -24,14 +25,18 @@ class PlaybackButtonsController:
             self.set_all_sliders_to_one()
             self.main_window.input_cine_signal_viewer.cine_signal_plot.setLimits(xMin=0, xMax=self.main_window.signal.time[-1], yMin=self.main_window.signal.min_data_point, yMax=self.main_window.signal.max_data_point)
             self.main_window.output_cine_signal_viewer.cine_signal_plot.setLimits(xMin=0, xMax=self.main_window.signal.time[-1], yMin=self.main_window.signal.min_data_point, yMax=self.main_window.signal.max_data_point)
+            self.main_window.input_cine_signal_viewer.cine_signal_plot.setXRange(0, self.main_window.signal.time[-1])
+            self.main_window.output_cine_signal_viewer.cine_signal_plot.setXRange(0, self.main_window.signal.time[-1])
 
     def clearSignal(self):
         self.main_window.signal.clear_signal()
+        self.timer.stop()
+        self.pointer = 0.1
+        self.signal_speed = 128
         
         self.main_window.input_cine_signal_viewer.cine_signal_plot.clear()
         self.main_window.output_cine_signal_viewer.cine_signal_plot.clear()
         self.main_window.frequency_domain_viewer.frequency_domain_plot.clear()
-        
 
     def plot_the_signal(self):
         self.main_window.input_cine_signal_viewer.cine_signal_plot.clear()
