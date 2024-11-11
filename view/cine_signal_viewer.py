@@ -66,20 +66,21 @@ class CineSignalViewer(QWidget):
         if self.sound_played:
             # self.cine_signal_plot.scene().removeItem(self.unmuted_sound_icon_item)
             # self.cine_signal_plot.scene().addItem(self.muted_sound_icon_item)
-            self.unmuted_sound_icon_item.setVisible(False)
-            self.muted_sound_icon_item.setVisible(True)
-            self.main_window.signal.stop_sound()
+            self.stop_plot_sound()
+            print("wrong")
         else:
             # self.cine_signal_plot.scene().removeItem(self.muted_sound_icon_item)
             # self.cine_signal_plot.scene().addItem(self.unmuted_sound_icon_item)
             # self.cine_signal_plot.scene().addItem(self.muted_sound_icon_item)
+            self.main_window.toggle_plots_played_sound(self.name)
             self.unmuted_sound_icon_item.setVisible(True)
             self.muted_sound_icon_item.setVisible(False)
             if self.name == "input":
                 self.main_window.signal.save_and_play_wav(True, self.main_window.signal.data, self.main_window.signal.sample_rate)
             else:
                 self.main_window.signal.save_and_play_wav(False, self.main_window.signal.sound_data, self.main_window.signal.sample_rate)
-        self.sound_played = not self.sound_played
+            self.sound_played = True
+        
 
     def hide_sound_icons(self):
         self.muted_sound_icon_item.setVisible(False)
@@ -89,6 +90,12 @@ class CineSignalViewer(QWidget):
     def show_sound_icons(self):
         self.muted_sound_icon_item.setVisible(True)
         self.unmuted_sound_icon_item.setVisible(False)
+        self.main_window.signal.stop_sound()
+
+    def stop_plot_sound(self):
+        self.unmuted_sound_icon_item.setVisible(False)
+        self.muted_sound_icon_item.setVisible(True)
+        self.sound_played = False
         self.main_window.signal.stop_sound()
 
         

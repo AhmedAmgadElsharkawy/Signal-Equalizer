@@ -282,3 +282,8 @@ class MainWindow(QMainWindow):
             self.input_cine_signal_viewer.cine_signal_plot.sigXRangeChanged.connect(self.synchronize_input_graph)
             self.input_cine_signal_viewer.cine_signal_plot.sigYRangeChanged.connect(self.synchronize_input_graph)
 
+    def toggle_plots_played_sound(self,name_of_caller_plot):
+        if(name_of_caller_plot == "input"):
+            self.output_cine_signal_viewer.stop_plot_sound()
+        else:
+            self.input_cine_signal_viewer.stop_plot_sound()
