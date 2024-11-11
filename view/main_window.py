@@ -142,6 +142,7 @@ class MainWindow(QMainWindow):
         self.buttons_controller = PlaybackButtonsController(self)
 
         self.load_signal_button.clicked.connect(self.buttons_controller.loadSignal)
+        self.clear_signal_button.clicked.connect(self.buttons_controller.clearSignal)
 
         self.sliders_widget.verticalScrollBar().setStyleSheet("""
             QScrollBar:vertical {

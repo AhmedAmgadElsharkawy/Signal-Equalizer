@@ -62,3 +62,19 @@ class Signal:
     def stop_sound(self):
         sd.stop()
 
+    def clear_signal(self):
+        self.file_path = None
+        self.sample_rate = None
+        self.data = []
+        self.time = []
+        self.freq_coeffs = []
+        self.static_freq_coeffs = []
+        self.freqs = []
+        self.modified_data = []
+        self.magnitudes = []
+        self.static_magnitudes = []
+        self.sound_data = []
+        self.freq_range_indices = []
+        self.N = None
+        self.T = None
+
