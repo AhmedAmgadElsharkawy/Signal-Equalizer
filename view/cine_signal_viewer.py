@@ -9,6 +9,7 @@ class CineSignalViewer(QWidget):
     def __init__(self, main_window, name):
         super().__init__()
         self.sound_played = False
+        self.color_bar = None
         self.name = name
         self.main_window = main_window
         self.main_layout = QHBoxLayout(self)
@@ -96,6 +97,13 @@ class CineSignalViewer(QWidget):
         self.muted_sound_icon_item.setVisible(True)
         self.sound_played = False
         self.main_window.signal.stop_sound()
+
+    def clear_the_plot(self):
+        self.cine_signal_plot.clear()
+        if self.color_bar is not None:
+            self.color_bar.remove()
+        self.spectogram_ax.clear()
+        self.color_bar = None
 
         
 

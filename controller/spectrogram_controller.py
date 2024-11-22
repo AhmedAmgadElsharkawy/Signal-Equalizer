@@ -20,8 +20,12 @@ class SpectrogramController:
             zero-values signal's spectrogram with the minimum color 
         """
         epsilon = 1e-10
-        self.main_window.output_cine_signal_viewer.spectogram_ax.pcolormesh(t_updated, f_updated, 10 * np.log10(Sxx_updated+epsilon), shading='auto')
-        self.main_window.input_cine_signal_viewer.spectogram_ax.pcolormesh(t_original, f_original, 10 * np.log10(Sxx_original+epsilon), shading='auto')
+        input_signal_pcm = self.main_window.input_cine_signal_viewer.spectogram_ax.pcolormesh(t_original, f_original, 10 * np.log10(Sxx_original+epsilon), shading='auto')
+        output_signal_pcm = self.main_window.output_cine_signal_viewer.spectogram_ax.pcolormesh(t_updated, f_updated, 10 * np.log10(Sxx_updated+epsilon), shading='auto')
+        
+        
+        self.main_window.input_cine_signal_viewer.color_bar = self.main_window.input_cine_signal_viewer.spectrogram_figure.colorbar(input_signal_pcm, ax=self.main_window.input_cine_signal_viewer.spectogram_ax, label='Intensity [dB]')
+        self.main_window.output_cine_signal_viewer.color_bar = self.main_window.output_cine_signal_viewer.spectrogram_figure.colorbar(output_signal_pcm, ax=self.main_window.output_cine_signal_viewer.spectogram_ax, label='Intensity [dB]')
 
-        self.main_window.output_cine_signal_viewer.signal_spectrogram.draw()
         self.main_window.input_cine_signal_viewer.signal_spectrogram.draw()
+        self.main_window.output_cine_signal_viewer.signal_spectrogram.draw()

@@ -239,7 +239,7 @@ class MainWindow(QMainWindow):
             slider.valueChanged.connect(self.on_slider_value_changed)
         if self.signal.sample_rate:
             self.signal.signal_processing(1, 0, 0)
-            self.buttons_controller.plot_the_signal()
+            # self.buttons_controller.plot_the_signal()
         self.update_sound_icons()
 
     def update_sliders_and_mode_state(self,state):

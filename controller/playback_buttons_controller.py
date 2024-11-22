@@ -45,13 +45,13 @@ class PlaybackButtonsController:
         self.pointer = 0.3
         self.signal_speed = 128
         
-        self.main_window.input_cine_signal_viewer.cine_signal_plot.clear()
-        self.main_window.output_cine_signal_viewer.cine_signal_plot.clear()
+        self.main_window.input_cine_signal_viewer.clear_the_plot()
+        self.main_window.output_cine_signal_viewer.clear_the_plot()
         self.main_window.frequency_domain_viewer.frequency_domain_plot.clear()
 
     def plot_the_signal(self):
-        self.main_window.input_cine_signal_viewer.cine_signal_plot.clear()
-        self.main_window.output_cine_signal_viewer.cine_signal_plot.clear()
+        self.main_window.input_cine_signal_viewer.clear_the_plot()
+        self.main_window.output_cine_signal_viewer.clear_the_plot()
         self.main_window.frequency_domain_viewer.frequency_domain_plot.clear()
         
         # Update frequency domain plot based on current scale selection
