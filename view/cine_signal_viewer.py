@@ -104,6 +104,7 @@ class CineSignalViewer(QWidget):
             self.color_bar.remove()
         self.spectogram_ax.clear()
         self.color_bar = None
+        self.signal_spectrogram.draw()
 
         
 
