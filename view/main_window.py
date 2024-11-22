@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QComboBox, QScrollArea, QCheckBox, QButtonGroup, QRadioButton, QFileDialog
 from PyQt5.QtCore import Qt
 from view.slider import Slider
-from model.mode_frequencies import mode_sliders_data
+from model.mode_frequencies import mode_sliders_data,generate_uniform_range
 from view.cine_signal_viewer import CineSignalViewer
 from view.frequency_domain_viewer import FrequencyDomainViewer
 from controller.frequency_domain_controller import FrequencyDomainController
@@ -140,7 +140,6 @@ class MainWindow(QMainWindow):
         self.output_controller = OutputController(self)
         self.buttons_controller = PlaybackButtonsController(self)
 
-        self.load_mode_sliders()
         self.load_signal_button.clicked.connect(self.buttons_controller.loadSignal)
         self.update_sliders_and_mode_state(False)
         self.clear_signal_button.clicked.connect(self.buttons_controller.clearSignal)
@@ -214,8 +213,8 @@ class MainWindow(QMainWindow):
             widget = self.sliders_widget_layout.itemAt(i).widget()
             if widget is not None:
                 widget.deleteLater()
-
         mode = self.mode_combobox.currentText()
+        # generate_uniform_range(self.signal.freqs)
         mode_sliders_list = mode_sliders_data[mode]
         for slider_object in mode_sliders_list:
             slider = Slider(name=slider_object.slider_label, min_range_value=slider_object.min_freq, max_range_value=slider_object.max_freq)
@@ -225,12 +224,14 @@ class MainWindow(QMainWindow):
         if self.signal.sample_rate:
             self.signal.signal_processing(1, 0, 0)
             self.buttons_controller.plot_the_signal()
-        
         self.update_sound_icons()
 
     def update_sliders_and_mode_state(self,state):
         if len(self.signal.time) == 0:
             state = False
+        if(state):
+            generate_uniform_range(self.signal.freqs)
+            self.load_mode_sliders()
         self.mode_combobox.setEnabled(state)
         for i in range(self.sliders_widget_layout.count()):
             widget = self.sliders_widget_layout.itemAt(i).widget()

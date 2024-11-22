@@ -26,10 +26,9 @@ class PlaybackButtonsController:
             file_extension = os.path.splitext(file_path)[1].lower()
             if file_extension == ".wav":
                 self.main_window.signal.load_wav_data(file_path,file_extension)  # Assumes this processes .wav files
-                self.plot_the_signal()
             elif file_extension == ".csv":
                 self.main_window.signal.load_csv_data(file_path,file_extension)  
-                self.plot_the_signal()
+            self.plot_the_signal()
             self.set_all_sliders_to_one()
             self.main_window.update_sound_icons()
             self.main_window.update_sliders_and_mode_state(True)
