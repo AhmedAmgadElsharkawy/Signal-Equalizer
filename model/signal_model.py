@@ -81,7 +81,7 @@ class Signal:
         if main_file:
             output_file_path = self.file_path
         else:
-            output_file_path = "modified_input.wav"
+            output_file_path = "data/modified_input_data/modified_input.wav"
         wavfile.write(output_file_path, sample_rate, modified_data_int16) 
         # Play the modified .wav file 
         sd.play(modified_data_int16, sample_rate) 
