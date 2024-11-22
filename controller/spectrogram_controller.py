@@ -6,8 +6,6 @@ class SpectrogramController:
         self.main_window = main_window
     
     def plot_spectrogram(self):
-        # you need to clear your plot first
-        # you need to clear your plot first
         data = self.main_window.signal.data
         modified_data = self.main_window.signal.modified_data
         sample_rate = self.main_window.signal.sample_rate
@@ -17,7 +15,7 @@ class SpectrogramController:
         
         self.main_window.input_cine_signal_viewer.spectogram_ax.clear() 
         self.main_window.output_cine_signal_viewer.spectogram_ax.clear()
-
+        # divide by zero error
         self.main_window.output_cine_signal_viewer.spectogram_ax.pcolormesh(t_updated, f_updated, 10 * np.log10(Sxx_updated), shading='auto')
         self.main_window.input_cine_signal_viewer.spectogram_ax.pcolormesh(t_original, f_original, 10 * np.log10(Sxx_original), shading='auto')
 
