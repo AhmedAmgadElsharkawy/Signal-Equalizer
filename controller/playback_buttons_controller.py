@@ -32,6 +32,7 @@ class PlaybackButtonsController:
             self.set_all_sliders_to_one()
             self.main_window.update_sound_icons()
             self.main_window.update_sliders_and_mode_state(True)
+            self.main_window.update_controls_buttons_state(True)
 
             self.main_window.input_cine_signal_viewer.cine_signal_plot.setLimits(xMin=0, xMax=self.main_window.signal.time[len(self.main_window.signal.time)-1], yMin=self.main_window.signal.min_data_point, yMax=self.main_window.signal.max_data_point)
             self.main_window.output_cine_signal_viewer.cine_signal_plot.setLimits(xMin=0, xMax=self.main_window.signal.time[len(self.main_window.signal.time)-1], yMin=self.main_window.signal.min_data_point, yMax=self.main_window.signal.max_data_point)
@@ -48,6 +49,9 @@ class PlaybackButtonsController:
         self.main_window.input_cine_signal_viewer.clear_the_plot()
         self.main_window.output_cine_signal_viewer.clear_the_plot()
         self.main_window.frequency_domain_viewer.frequency_domain_plot.clear()
+
+        self.main_window.update_sliders_and_mode_state(False)
+        self.main_window.update_controls_buttons_state(False)
 
     def plot_the_signal(self):
         self.main_window.input_cine_signal_viewer.clear_the_plot()

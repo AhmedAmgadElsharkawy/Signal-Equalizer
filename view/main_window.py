@@ -153,6 +153,8 @@ class MainWindow(QMainWindow):
         self.speed_up_button.clicked.connect(self.buttons_controller.increase_signal_speed)
         self.speed_down_button.clicked.connect(self.buttons_controller.decrease_signal_speed)
 
+        self.update_controls_buttons_state(False)
+
         self.sliders_widget.verticalScrollBar().setStyleSheet("""
             QScrollBar:vertical {
                 border: none;
@@ -318,3 +320,11 @@ class MainWindow(QMainWindow):
             self.output_cine_signal_viewer.stop_plot_sound()
         else:
             self.input_cine_signal_viewer.stop_plot_sound()
+
+    def update_controls_buttons_state(self,state):
+        # self.load_signal_button.setEnabled(state)
+        self.clear_signal_button.setEnabled(state)
+        self.play_and_pause_button.setEnabled(state)
+        self.rewind_button.setEnabled(state)
+        self.speed_down_button.setEnabled(state)
+        self.speed_up_button.setEnabled(state)
