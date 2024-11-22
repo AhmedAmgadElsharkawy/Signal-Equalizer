@@ -15,9 +15,13 @@ class SpectrogramController:
         
         self.main_window.input_cine_signal_viewer.spectogram_ax.clear() 
         self.main_window.output_cine_signal_viewer.spectogram_ax.clear()
-        # divide by zero error
-        self.main_window.output_cine_signal_viewer.spectogram_ax.pcolormesh(t_updated, f_updated, 10 * np.log10(Sxx_updated), shading='auto')
-        self.main_window.input_cine_signal_viewer.spectogram_ax.pcolormesh(t_original, f_original, 10 * np.log10(Sxx_original), shading='auto')
+        """
+            divide by zero error with the logarithm so we use small epsilon to plot
+            zero-values signal's spectrogram with the minimum color 
+        """
+        epsilon = 1e-10
+        self.main_window.output_cine_signal_viewer.spectogram_ax.pcolormesh(t_updated, f_updated, 10 * np.log10(Sxx_updated+epsilon), shading='auto')
+        self.main_window.input_cine_signal_viewer.spectogram_ax.pcolormesh(t_original, f_original, 10 * np.log10(Sxx_original+epsilon), shading='auto')
 
         self.main_window.output_cine_signal_viewer.signal_spectrogram.draw()
         self.main_window.input_cine_signal_viewer.signal_spectrogram.draw()
