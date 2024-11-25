@@ -56,18 +56,15 @@ class PlaybackButtonsController:
         self.main_window.frequency_domain_viewer.frequency_domain_plot.clear()
         
         # Update frequency domain plot based on current scale selection
-        is_linear = self.main_window.linear_scale_radio_button.isChecked()
         self.main_window.switch_frequency_scale()
         
         freqs, magnitudes = self.main_window.signal.freqs, self.main_window.signal.magnitudes
         # Use current scale selection instead of defaulting to linear
         scale = 'audiogram' if self.main_window.audiogram_scale_radio_button.isChecked() else 'linear'
         self.main_window.frequency_domain_controller.plot_freq_domain(freqs, magnitudes, scale)
-        self.main_window.frequency_domain_controller.plot_freq_domain()
         self.main_window.spectrogram_controller.plot_spectrogram()
         self.main_window.input_cine_signal_viewer.cine_signal_plot.plot(self.main_window.signal.time, self.main_window.signal.data, pen=pg.mkPen(color=(170, 0, 0)))
         self.main_window.output_cine_signal_viewer.cine_signal_plot.plot(self.main_window.signal.time, self.main_window.signal.modified_data, pen=pg.mkPen(color=(170, 0, 0)))
-        # self.main_window.frequency_domain_viewer.frequency_domain_plot.plot(self.main_window.signal.freqs, self.main_window.signal.magnitudes, pen=pg.mkPen(color=(170, 0, 0)))
 
 
     def set_all_sliders_to_one(self):

@@ -6,8 +6,11 @@ class FrequencyDomainController:
         self.main_window = main_window
         self.current_scale = 'linear'
 
-    def convert_to_db(self, magnitude):
-        return 20 * np.log10(magnitude)
+    def convert_to_db(self, frequency):
+        if frequency == 0:
+            return -np.inf  
+        else:
+            return 20 * np.log10(frequency)
 
     def plot_freq_domain(self, freqs, magnitudes, scale=None):
         if scale is not None:
@@ -21,11 +24,10 @@ class FrequencyDomainController:
             )
         elif scale == 'audiogram':
             # Audiogram (dB) scale plotting
-            audiogram_mag = np.array([self.convert_to_db(mag) for mag in magnitudes])
+            audiogram_freq = np.array([self.convert_to_db(freq) for freq in magnitudes])
             self.main_window.frequency_domain_viewer.frequency_domain_plot.plot(
-                freqs, audiogram_mag, pen='b'
+                audiogram_freq, magnitudes, pen='b'
             )
-            # self.main_window.frequency_domain_viewer.frequency_domain_plot.invertY()
 
         self.main_window.frequency_domain_viewer.frequency_domain_plot.setLabel('bottom', 'Frequency (Hz)')
         self.main_window.frequency_domain_viewer.frequency_domain_plot.setLabel('left', 'Magnitude')
