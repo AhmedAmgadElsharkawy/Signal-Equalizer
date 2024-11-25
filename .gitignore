@@ -18,6 +18,8 @@ __pycache__/
 *.temp
 tempCodeRunnerFile.python
 data/modified_input_data/*
+!data/modified_input_data/.gitkeep
+
 
 # IDE-specific settings
 *.sublime-workspace
