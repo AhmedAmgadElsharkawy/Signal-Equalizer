@@ -227,6 +227,8 @@ class MainWindow(QMainWindow):
 
 
     def load_mode_sliders(self):
+        self.signal.modified_data = self.signal.data
+        self.buttons_controller.plot_the_signal()
         for i in reversed(range(self.sliders_widget_layout.count())):
             widget = self.sliders_widget_layout.itemAt(i).widget()
             if widget is not None:
