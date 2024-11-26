@@ -17,8 +17,8 @@ mode_sliders_data = {
     "Animal Sounds":[slider_data("owl",650,950),slider_data("frog",951,1900),
                     slider_data("canary",3000,5500),slider_data("insect",6000,20000)],
 
-    "ECG Abnormalities":[slider_data("normal",39,190),slider_data("Aflut",51,60),
-                    slider_data("Vt",120,200),slider_data("Afib",1101,1200)]
+    "ECG Abnormalities":[slider_data("normal",0,150),slider_data("Aflut",40,60),
+                    slider_data("Vt",95,155),slider_data("Afib",60,95)]
 }
 
 

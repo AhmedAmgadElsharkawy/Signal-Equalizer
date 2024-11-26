@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.io import wavfile
 import sounddevice as sd
+import pandas as pd
 class OutputController:
     def __init__(self,main_window):
         self.main_widnow = main_window
