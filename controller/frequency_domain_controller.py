@@ -24,7 +24,7 @@ class FrequencyDomainController:
             )
         elif scale == 'audiogram':
             # Audiogram (dB) scale plotting
-            audiogram_freq = np.array([self.convert_to_db(freq) for freq in magnitudes])
+            audiogram_freq = np.array([self.convert_to_db(freq) for freq in freqs])
             self.main_window.frequency_domain_viewer.frequency_domain_plot.plot(
                 audiogram_freq, magnitudes, pen='b'
             )
