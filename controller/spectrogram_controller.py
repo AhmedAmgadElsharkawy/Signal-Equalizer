@@ -20,10 +20,8 @@ class SpectrogramController:
             zero-values signal's spectrogram with the minimum color 
         """
         epsilon = 1e-10
-        Sxx_original_db = self.convert_to_db(Sxx_original)
-        Sxx_updated_db = self.convert_to_db(Sxx_updated)
-        input_signal_pcm = self.main_window.input_cine_signal_viewer.spectogram_ax.pcolormesh(t_original, f_original, Sxx_original_db, shading='auto')
-        output_signal_pcm = self.main_window.output_cine_signal_viewer.spectogram_ax.pcolormesh(t_updated, f_updated,Sxx_updated_db, shading='auto')
+        input_signal_pcm = self.main_window.input_cine_signal_viewer.spectogram_ax.pcolormesh(t_original, f_original, 10 * np.log10(Sxx_original+epsilon), shading='auto')
+        output_signal_pcm = self.main_window.output_cine_signal_viewer.spectogram_ax.pcolormesh(t_updated, f_updated, 10 * np.log10(Sxx_updated+epsilon), shading='auto')
         
         
         self.main_window.input_cine_signal_viewer.color_bar = self.main_window.input_cine_signal_viewer.spectrogram_figure.colorbar(input_signal_pcm, ax=self.main_window.input_cine_signal_viewer.spectogram_ax, label='Intensity [dB]')
@@ -31,11 +29,3 @@ class SpectrogramController:
 
         self.main_window.input_cine_signal_viewer.signal_spectrogram.draw()
         self.main_window.output_cine_signal_viewer.signal_spectrogram.draw()
-
-    def convert_to_db(self,Sxx):
-        Sxx_db = Sxx.copy()
-        for i in range(len(Sxx)):
-            for j in range(len(Sxx[0])):
-                if(Sxx[i][j] != 0):
-                    Sxx_db[i][j] = 10 * np.log10(Sxx[i][j])
-        return Sxx_db
