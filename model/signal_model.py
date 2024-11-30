@@ -72,25 +72,16 @@ class Signal:
         self.magnitudes[self.freq_range_indices] = self.static_magnitudes[self.freq_range_indices] * value
         self.freq_coeffs[self.freq_range_indices] = self.static_freq_coeffs[self.freq_range_indices] * value
         self.modified_data = np.fft.irfft(self.freq_coeffs)
-        # divide by zero error
-        max_value = np.max(np.abs(self.modified_data))
-        if(max_value):
-            self.sound_data = self.modified_data / np.max(np.abs(self.modified_data)) 
-        else:
-            self.sound_data = self.modified_data
+        self.sound_data = self.modified_data / np.max(np.abs(self.modified_data)) 
 
     def save_and_play_wav(self, main_file, modified_data, sample_rate): 
         # Normalize the modified data to range [-32767, 32767] (16-bit PCM) 
-        max_value = np.max(np.abs(modified_data))
-        if(max_value):
-            modified_data_int16 = np.int16(modified_data / max_value * 32767) 
-        else:
-            modified_data_int16 = np.int16(modified_data)
+        modified_data_int16 = np.int16(modified_data / np.max(np.abs(modified_data)) * 32767) 
         # Write the modified data to a .wav file 
         if main_file:
             output_file_path = self.file_path
         else:
-            output_file_path = "data/modified_input_data/modified_input.wav"
+            output_file_path = "modified_input.wav"
         wavfile.write(output_file_path, sample_rate, modified_data_int16) 
         # Play the modified .wav file 
         sd.play(modified_data_int16, sample_rate) 
