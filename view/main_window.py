@@ -4,12 +4,15 @@ from view.slider import Slider
 from model.mode_frequencies import mode_sliders_data,generate_uniform_range
 from view.cine_signal_viewer import CineSignalViewer
 from view.frequency_domain_viewer import FrequencyDomainViewer
+from view.weiner_filter_view import WeinerFilterView
 from controller.frequency_domain_controller import FrequencyDomainController
 from controller.mode_controller import ModeController
 from controller.output_controller import OutputController
 from controller.playback_buttons_controller import PlaybackButtonsController
 from controller.spectrogram_controller import SpectrogramController
 from model.signal_model import Signal
+
+
 
 
 class MainWindow(QMainWindow):
@@ -89,7 +92,7 @@ class MainWindow(QMainWindow):
         self.mode_label.setObjectName("mode_label")
         self.mode_combobox = QComboBox()
         self.mode_combobox.setObjectName("mode_combobox")
-        self.mode_combobox.addItems(["Uniform Range", "Musical Instruments", "Animal Sounds", "ECG Abnormalities"])
+        self.mode_combobox.addItems(["Uniform Range", "Musical Instruments", "Animal Sounds", "ECG Abnormalities","Weiner Filter"])
         self.mode_widget_layout.addWidget(self.mode_label)
         self.mode_widget_layout.addWidget(self.mode_combobox)
 
@@ -133,7 +136,7 @@ class MainWindow(QMainWindow):
         self.frequency_domain_viewer = FrequencyDomainViewer()
         self.graphs_widget_layout.addWidget(self.frequency_domain_viewer)
 
-        self.mode_combobox.currentIndexChanged.connect(self.load_mode_sliders)
+        self.mode_combobox.currentIndexChanged.connect(self.load_mode)
 
         self.mode_controller = ModeController(self)
         self.spectrogram_controller = SpectrogramController(self)
@@ -224,16 +227,31 @@ class MainWindow(QMainWindow):
                 self.signal.magnitudes,
                 scale
             )
+    
+    def load_mode(self):
+        mode = self.mode_combobox.currentText()
+        self.remove_the_widgets()
+        if mode == 'Weiner Filter':
+            self.load_weiner_filter()
+        else:
+            self.load_mode_sliders()
 
-
-    def load_mode_sliders(self):
-        self.signal.modified_data = self.signal.data
-        self.buttons_controller.plot_the_signal()
+    def remove_the_widgets(self):
         for i in reversed(range(self.sliders_widget_layout.count())):
             widget = self.sliders_widget_layout.itemAt(i).widget()
             if widget is not None:
                 widget.deleteLater()
+
+    def load_weiner_filter(self):
+        self.weiner_filter_view = WeinerFilterView()
+        self.sliders_widget_layout.addWidget(self.weiner_filter_view)
+
+
+    def load_mode_sliders(self):
         mode = self.mode_combobox.currentText()
+        self.signal.modified_data = self.signal.data
+        self.buttons_controller.plot_the_signal()
+
         # generate_uniform_range(self.signal.freqs)
         mode_sliders_list = mode_sliders_data[mode]
         for slider_object in mode_sliders_list:
@@ -251,11 +269,11 @@ class MainWindow(QMainWindow):
             state = False
         if(state):
             generate_uniform_range(self.signal.freqs)
-            self.load_mode_sliders()
+            self.load_mode()
+        else:
+            self.remove_the_widgets()
         self.mode_combobox.setEnabled(state)
-        for i in range(self.sliders_widget_layout.count()):
-            widget = self.sliders_widget_layout.itemAt(i).widget()
-            widget.setEnabled(state)
+
         
     def update_sound_icons(self):
         if len(self.signal.time) == 0 or self.signal.file_extension != ".wav":
