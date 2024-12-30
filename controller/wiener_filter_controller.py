@@ -63,6 +63,7 @@ class WienerFilterController:
         
         # Update the filtered signal
         self.main_window.signal.modified_data = filtered_signal
+        self.main_window.signal.sound_data = self.main_window.signal.modified_data / np.max(np.abs(self.main_window.signal.modified_data)) 
         self.main_window.buttons_controller.plot_the_signal()
 
     def reset_filter(self):
