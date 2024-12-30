@@ -5,6 +5,8 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont
 import pyqtgraph as pg
+from controller.weiner_filter_controller import WeinerFilterController
+
 
 
 
@@ -49,9 +51,6 @@ class WeinerFilterView(QWidget):
         self.apply_filter_button.setFixedHeight(30)
         self.reset_filter_button.setFixedHeight(30)
 
-    def clear_the_plot(self):
-       self.weiner_plot_widget.clear()
+        self.weiner_filter_controller = WeinerFilterController(self,self.main_window)
 
-    def plot_the_weiner(self):
-        self.clear_the_plot()
-        self.weiner_plot_widget.plot(self.main_window.signal.time, self.main_window.signal.data, pen=pg.mkPen(color=(170, 0, 0)))
+
