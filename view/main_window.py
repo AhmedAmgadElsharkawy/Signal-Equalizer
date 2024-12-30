@@ -276,7 +276,7 @@ class MainWindow(QMainWindow):
 
         
     def update_sound_icons(self):
-        if len(self.signal.time) == 0 or self.signal.file_extension != ".wav":
+        if len(self.signal.time) == 0:
             self.input_cine_signal_viewer.hide_sound_icons()
             self.output_cine_signal_viewer.hide_sound_icons()
         else:

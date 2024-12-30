@@ -19,15 +19,11 @@ class PlaybackButtonsController:
 
     def loadSignal(self):
         self.clearSignal()
-        file_path, _ = QFileDialog.getOpenFileName(self.main_window, "Open .wav or .csv file", "", "*.csv *.wav")
+        file_path, _ = QFileDialog.getOpenFileName(self.main_window, "Open .wav", "", "*.wav")
         
         if file_path:
             self.main_window.file_path = file_path
-            file_extension = os.path.splitext(file_path)[1].lower()
-            if file_extension == ".wav":
-                self.main_window.signal.load_wav_data(file_path,file_extension)  # Assumes this processes .wav files
-            elif file_extension == ".csv":
-                self.main_window.signal.load_csv_data(file_path,file_extension)  
+            self.main_window.signal.load_wav_data(file_path)  # Assumes this processes .wav files
             self.main_window.update_sound_icons()
             self.main_window.update_sliders_and_mode_state(True)
             self.main_window.update_controls_buttons_state(True)
