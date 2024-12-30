@@ -38,6 +38,8 @@ class WeinerFilterView(QWidget):
         self.weiner_plot_widget.getAxis('bottom').setTextPen(pg.mkPen('k')) 
         self.weiner_plot_widget.getAxis('left').setTextPen(pg.mkPen('k'))  
 
+        self.weiner_linear_region_item = pg.LinearRegionItem(movable=True)
+
         self.weiner_buttons_widget = QWidget()
         self.weiner_buttons_widget_layout = QHBoxLayout(self.weiner_buttons_widget)
         self.main_widget_layout.addStretch()
@@ -50,6 +52,8 @@ class WeinerFilterView(QWidget):
 
         self.apply_filter_button.setFixedHeight(30)
         self.reset_filter_button.setFixedHeight(30)
+
+
 
         self.weiner_filter_controller = WeinerFilterController(self,self.main_window)
 
