@@ -40,7 +40,10 @@ class Signal:
         self.file_path = file_path
         self.file_extension = file_extension
         self.sample_rate, self.data = wavfile.read(file_path)
+        if len(self.data) % 2 != 0:
+            self.data = np.pad(self.data, (0, 1), 'constant')  # Pad with one zero
         self.time = np.arange(0, len(self.data)) / self.sample_rate
+        print(self.time.shape,self.data.shape)
         self.calculate_data()
 
     def calculate_data(self):
