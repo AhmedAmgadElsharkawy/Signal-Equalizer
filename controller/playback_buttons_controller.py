@@ -28,11 +28,11 @@ class PlaybackButtonsController:
                 self.main_window.signal.load_wav_data(file_path,file_extension)  # Assumes this processes .wav files
             elif file_extension == ".csv":
                 self.main_window.signal.load_csv_data(file_path,file_extension)  
-            self.plot_the_signal()
-            self.set_all_sliders_to_one()
             self.main_window.update_sound_icons()
             self.main_window.update_sliders_and_mode_state(True)
             self.main_window.update_controls_buttons_state(True)
+            self.plot_the_signal()
+            self.set_all_sliders_to_one()
 
             self.main_window.input_cine_signal_viewer.cine_signal_plot.setLimits(xMin=0, xMax=self.main_window.signal.time[len(self.main_window.signal.time)-1], yMin=self.main_window.signal.min_data_point, yMax=self.main_window.signal.max_data_point)
             self.main_window.output_cine_signal_viewer.cine_signal_plot.setLimits(xMin=0, xMax=self.main_window.signal.time[len(self.main_window.signal.time)-1], yMin=self.main_window.signal.min_data_point, yMax=self.main_window.signal.max_data_point)
@@ -69,6 +69,8 @@ class PlaybackButtonsController:
         self.main_window.input_cine_signal_viewer.cine_signal_plot.plot(self.main_window.signal.time, self.main_window.signal.data, pen=pg.mkPen(color=(170, 0, 0)))
         self.main_window.output_cine_signal_viewer.cine_signal_plot.plot(self.main_window.signal.time, self.main_window.signal.modified_data, pen=pg.mkPen(color=(170, 0, 0)))
 
+        if  self.main_window.mode_combobox.currentText() == "Weiner Filter":
+            self.main_window.weiner_filter_view.plot_the_weiner()
 
     def set_all_sliders_to_one(self):
         # Loop through all widgets in sliders_widget_layout

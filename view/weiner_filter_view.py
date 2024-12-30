@@ -9,8 +9,9 @@ import pyqtgraph as pg
 
 
 class WeinerFilterView(QWidget):
-    def __init__(self):
+    def __init__(self,main_window):
         super().__init__()
+        self.main_window = main_window
         self.central_layout = QVBoxLayout(self)
         self.central_layout.setContentsMargins(0,0,0,0)
         self.main_widget = QWidget()
@@ -24,16 +25,16 @@ class WeinerFilterView(QWidget):
         font.setPointSize(10)  # Set font size
         self.header_label.setFont(font)
         self.main_widget_layout.addWidget(self.header_label)
-        self.weiner_filter_widget = pg.PlotWidget()
+        self.weiner_plot_widget = pg.PlotWidget()
         # self.weiner_filter_widget.setTitle("Choose The Silent Segment")
-        self.weiner_filter_widget.setFixedHeight(200)
-        self.main_widget_layout.addWidget(self.weiner_filter_widget)
-        self.weiner_filter_widget.setBackground("w")
-        self.weiner_filter_widget.showGrid(x=True, y=True)
-        self.weiner_filter_widget.getAxis('bottom').setPen(pg.mkPen('k'))  
-        self.weiner_filter_widget.getAxis('left').setPen(pg.mkPen('k'))
-        self.weiner_filter_widget.getAxis('bottom').setTextPen(pg.mkPen('k')) 
-        self.weiner_filter_widget.getAxis('left').setTextPen(pg.mkPen('k'))  
+        self.weiner_plot_widget.setFixedHeight(200)
+        self.main_widget_layout.addWidget(self.weiner_plot_widget)
+        self.weiner_plot_widget.setBackground("w")
+        self.weiner_plot_widget.showGrid(x=True, y=True)
+        self.weiner_plot_widget.getAxis('bottom').setPen(pg.mkPen('k'))  
+        self.weiner_plot_widget.getAxis('left').setPen(pg.mkPen('k'))
+        self.weiner_plot_widget.getAxis('bottom').setTextPen(pg.mkPen('k')) 
+        self.weiner_plot_widget.getAxis('left').setTextPen(pg.mkPen('k'))  
 
         self.weiner_buttons_widget = QWidget()
         self.weiner_buttons_widget_layout = QHBoxLayout(self.weiner_buttons_widget)
@@ -47,3 +48,10 @@ class WeinerFilterView(QWidget):
 
         self.apply_filter_button.setFixedHeight(30)
         self.reset_filter_button.setFixedHeight(30)
+
+    def clear_the_plot(self):
+       self.weiner_plot_widget.clear()
+
+    def plot_the_weiner(self):
+        self.clear_the_plot()
+        self.weiner_plot_widget.plot(self.main_window.signal.time, self.main_window.signal.data, pen=pg.mkPen(color=(170, 0, 0)))

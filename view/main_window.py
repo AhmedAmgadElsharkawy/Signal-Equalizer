@@ -230,11 +230,13 @@ class MainWindow(QMainWindow):
     
     def load_mode(self):
         mode = self.mode_combobox.currentText()
+        self.signal.modified_data = self.signal.data
         self.remove_the_widgets()
         if mode == 'Weiner Filter':
             self.load_weiner_filter()
         else:
             self.load_mode_sliders()
+        self.buttons_controller.plot_the_signal()
 
     def remove_the_widgets(self):
         for i in reversed(range(self.sliders_widget_layout.count())):
@@ -243,14 +245,12 @@ class MainWindow(QMainWindow):
                 widget.deleteLater()
 
     def load_weiner_filter(self):
-        self.weiner_filter_view = WeinerFilterView()
+        self.weiner_filter_view = WeinerFilterView(self)
         self.sliders_widget_layout.addWidget(self.weiner_filter_view)
 
 
     def load_mode_sliders(self):
         mode = self.mode_combobox.currentText()
-        self.signal.modified_data = self.signal.data
-        self.buttons_controller.plot_the_signal()
 
         # generate_uniform_range(self.signal.freqs)
         mode_sliders_list = mode_sliders_data[mode]
