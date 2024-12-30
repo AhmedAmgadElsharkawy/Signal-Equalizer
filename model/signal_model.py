@@ -112,3 +112,10 @@ class Signal:
         self.min_data_point = None
         self.max_data_point = None
 
+    def reset_modified_data(self):
+        self.modified_data = self.data
+        self.freq_coeffs = self.static_freq_coeffs
+        self.magnitudes = self.static_magnitudes
+        self.sound_data = self.modified_data / np.max(np.abs(self.modified_data)) 
+
+

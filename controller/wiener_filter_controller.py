@@ -12,62 +12,46 @@ class WienerFilterController:
 
 
     def apply_filter(self):
-        # Get selected region
-        region = self.wiener_filter_view.wiener_linear_region_item.getRegion()
-        start, end = region[0], region[1]
-        selected_indices = (self.main_window.signal.time >= start) & (self.main_window.signal.time <= end)
-        selected_y = self.main_window.signal.data[selected_indices]
-        
-        # FFT of signal and noise
+        selected_y = self.extract_the_selected_region()
+    
         N = len(self.main_window.signal.data)
-        signal_fft = np.fft.rfft(self.main_window.signal.data)  # Use rfft for the signal
-        phase = np.angle(signal_fft)  # Store phase info for +ve frequencies
+        signal_fft = self.main_window.signal.freq_coeffs
+        phase = np.angle(signal_fft)
 
-        noise_fft = np.fft.rfft(selected_y, n=N)  # Use rfft for the noise with same length
+        noise_fft = np.fft.rfft(selected_y, n=N)
         noise_power = (np.abs(noise_fft) ** 2) / N
 
-        # Compute power spectra
         signal_power = (np.abs(signal_fft) ** 2) / N
 
-        # Smooth power spectra
         window_size = 25  
         kernel = np.ones(window_size) / window_size
 
         signal_power_smooth = np.convolve(signal_power, kernel, mode='same')
         noise_power_smooth = np.convolve(noise_power, kernel, mode='same')
 
-        # Compute SNR (Signal-to-Noise Ratio)
         snr = signal_power_smooth / (noise_power_smooth + 1e-10)
         
-        # Apply adaptive threshold
         snr_threshold = 0.3 
         gain = np.maximum(1 - 1 / (snr + 1), 0)
         gain[snr < snr_threshold] *= 0.5 
 
-        # Apply oversubtraction factor
         alpha = 10.0  
         gain = np.maximum(1 - alpha * (noise_power_smooth / (signal_power_smooth + 1e-10)), 0.1)
         gain = np.tanh(gain) 
         
-        # Apply filter in the frequency domain
         filtered_fft = signal_fft * gain
-
-        # Retain phase information
         filtered_fft = np.abs(filtered_fft) * np.exp(1j * phase)
-
-        # Convert back to time domain
         filtered_signal = np.fft.irfft(filtered_fft)
-
-        # Ensure lengths match
-        filtered_signal = filtered_signal[:len(self.main_window.signal.data)]
+        filtered_signal = filtered_signal[:N]
         
-        # Update the filtered signal
         self.main_window.signal.modified_data = filtered_signal
         self.main_window.signal.sound_data = self.main_window.signal.modified_data / np.max(np.abs(self.main_window.signal.modified_data)) 
+        
         self.main_window.buttons_controller.plot_the_signal()
 
     def reset_filter(self):
-        pass
+        self.main_window.signal.reset_modified_data()
+        self.main_window.buttons_controller.plot_the_signal()
 
     def plot_the_wiener(self):
         self.wiener_filter_view.wiener_plot_widget.clear()
@@ -80,15 +64,10 @@ class WienerFilterController:
     
     def extract_the_selected_region(self):
         region = self.wiener_filter_view.wiener_linear_region_item.getRegion()
-
-        # for i,x in enumerate(x1):
-        #     if x >= signal_region1[0] and x <= signal_region1[1]:
-        #         new_x1.append(x)
-        #         new_y1.append(y1[i])
-
-        # for i,x in enumerate(x2):
-        #     if x >= signal_region2[0] and x <= signal_region2[1]:
-        #         new_x2.append(x)
-        #         new_y2.append(y2[i])
+        start, end = region[0], region[1]
+        selected_indices = (self.main_window.signal.time >= start) & (self.main_window.signal.time <= end)
+        return self.main_window.signal.data[selected_indices]
+        
+        
 
     
