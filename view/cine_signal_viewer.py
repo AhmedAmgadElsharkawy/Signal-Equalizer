@@ -1,9 +1,12 @@
-from PyQt5.QtWidgets import QWidget, QHBoxLayout
+from PyQt5.QtWidgets import QWidget, QHBoxLayout,QPushButton
 import pyqtgraph as pg
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtWidgets import QGraphicsPixmapItem
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap,QIcon
+from PyQt5.QtCore import QSize,Qt
+
+
 
 class CineSignalViewer(QWidget):
     def __init__(self, main_window, name):
@@ -24,24 +27,17 @@ class CineSignalViewer(QWidget):
         self.cine_signal_plot.getAxis('bottom').setTextPen(pg.mkPen('k')) 
         self.cine_signal_plot.getAxis('left').setTextPen(pg.mkPen('k'))  
 
-        self.muted_pixmap = QPixmap('assets/icons/mute.png')
-        self.unmuted_pixmap = QPixmap('assets/icons/unmute.png')
 
-        self.muted_sound_icon_item = QGraphicsPixmapItem(self.muted_pixmap)
-        self.muted_sound_icon_item.mousePressEvent = self.click_icon
+        self.play_icon = QIcon("assets/icons/play-button.png") 
+        self.pause_icon = QIcon("assets/icons/pause-button.png")
 
-        self.unmuted_sound_icon_item = QGraphicsPixmapItem(self.unmuted_pixmap)
-        self.unmuted_sound_icon_item.mousePressEvent = self.click_icon
-        
-        self.muted_sound_icon_item.setScale(30 / self.muted_pixmap.width())
-        self.unmuted_sound_icon_item.setScale(30 / self.unmuted_pixmap.width())
-        
-        self.cine_signal_plot.scene().addItem(self.muted_sound_icon_item)
-        self.cine_signal_plot.scene().addItem(self.unmuted_sound_icon_item)
-        self.show_sound_icons()
-
-        
-
+        self.toggle_sound_play_button = QPushButton(parent = self.cine_signal_plot)
+        self.toggle_sound_play_button.setVisible(False)
+        self.toggle_sound_play_button.setIcon(self.play_icon)
+        self.toggle_sound_play_button.setGeometry(60,20,30,30)
+        self.toggle_sound_play_button.setIconSize(QSize(30, 30))  # Set icon size to 32x32
+        self.toggle_sound_play_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.toggle_sound_play_button.clicked.connect(self.toggle_sound_play)
 
         self.spectrogram_figure, self.spectogram_ax = plt.subplots()
         self.signal_spectrogram = FigureCanvas(self.spectrogram_figure)
@@ -49,54 +45,48 @@ class CineSignalViewer(QWidget):
 
         self.spectrogram_figure.subplots_adjust(left=0.12, right=0.95, top=0.95, bottom=0.12)
 
-    def resizeEvent(self, event):
-        super().resizeEvent(event)
-        self.reposition_icon()
 
-    def reposition_icon(self):
-        # plot_width = self.cine_signal_plot.width()
-        # plot_height = self.cine_signal_plot.height()
-        icon_width = 40
-        icon_height = 40
-        # self.muted_sound_icon_item.setPos(plot_width - icon_width - 10, plot_height - icon_height - 15) 
-        # self.unmuted_sound_icon_item.setPos(plot_width - icon_width - 10, plot_height - icon_height - 15) 
-        self.muted_sound_icon_item.setPos(icon_width + 10,icon_height -25 ) 
-        self.unmuted_sound_icon_item.setPos(icon_width + 10,icon_height -25 ) 
+        self.toggle_sound_play_button.setStyleSheet("""
+            QPushButton {
+                border: none;
+                background-color: transparent;
+            }
+            QPushButton:hover {
+                background-color: none; /* Optional: hover effect */
+            }
+        """)
 
-    def click_icon(self,event):
+
+
+    def toggle_sound_play(self,event):
         if self.sound_played:
-            # self.cine_signal_plot.scene().removeItem(self.unmuted_sound_icon_item)
-            # self.cine_signal_plot.scene().addItem(self.muted_sound_icon_item)
             self.stop_plot_sound()
         else:
-            # self.cine_signal_plot.scene().removeItem(self.muted_sound_icon_item)
-            # self.cine_signal_plot.scene().addItem(self.unmuted_sound_icon_item)
-            # self.cine_signal_plot.scene().addItem(self.muted_sound_icon_item)
-            self.main_window.toggle_plots_played_sound(self.name)
-            self.unmuted_sound_icon_item.setVisible(True)
-            self.muted_sound_icon_item.setVisible(False)
-            if self.name == "input":
-                self.main_window.signal.save_and_play_wav(True, self.main_window.signal.data, self.main_window.signal.sample_rate)
-            else:
-                self.main_window.signal.save_and_play_wav(False, self.main_window.signal.sound_data, self.main_window.signal.sample_rate)
-            self.sound_played = True
+            self.play_plot_sound()
+
+
+    def play_plot_sound(self):
+        self.main_window.toggle_plots_played_sound(self.name)
+        self.toggle_sound_play_button.setIcon(self.pause_icon)
+        if self.name == "input":
+            self.main_window.signal.save_and_play_wav(True, self.main_window.signal.data, self.main_window.signal.sample_rate)
+        else:
+            self.main_window.signal.save_and_play_wav(False, self.main_window.signal.sound_data, self.main_window.signal.sample_rate)
+        self.sound_played = True
         
-
-    def hide_sound_icons(self):
-        self.muted_sound_icon_item.setVisible(False)
-        self.unmuted_sound_icon_item.setVisible(False)
-        self.main_window.signal.stop_sound()
-
-    def show_sound_icons(self):
-        self.muted_sound_icon_item.setVisible(True)
-        self.unmuted_sound_icon_item.setVisible(False)
-        self.main_window.signal.stop_sound()
-
     def stop_plot_sound(self):
-        self.unmuted_sound_icon_item.setVisible(False)
-        self.muted_sound_icon_item.setVisible(True)
+        self.toggle_sound_play_button.setIcon(self.play_icon)
         self.sound_played = False
         self.main_window.signal.stop_sound()
+
+    def hide_toggle_sound_play_button(self):
+        self.toggle_sound_play_button.setVisible(False)
+        self.main_window.signal.stop_sound()
+
+    def show_toggle_sound_play_button(self):
+        self.toggle_sound_play_button.setVisible(True)
+        self.main_window.signal.stop_sound()
+
 
     def clear_the_plot(self):
         self.cine_signal_plot.clear()

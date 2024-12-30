@@ -277,11 +277,11 @@ class MainWindow(QMainWindow):
         
     def update_sound_icons(self):
         if len(self.signal.time) == 0:
-            self.input_cine_signal_viewer.hide_sound_icons()
-            self.output_cine_signal_viewer.hide_sound_icons()
+            self.input_cine_signal_viewer.hide_toggle_sound_play_button()
+            self.output_cine_signal_viewer.hide_toggle_sound_play_button()
         else:
-            self.input_cine_signal_viewer.show_sound_icons()
-            self.output_cine_signal_viewer.show_sound_icons()
+            self.input_cine_signal_viewer.show_toggle_sound_play_button()
+            self.output_cine_signal_viewer.show_toggle_sound_play_button()
 
     def toggle_spectrograms(self,state):
         if state == Qt.Unchecked:

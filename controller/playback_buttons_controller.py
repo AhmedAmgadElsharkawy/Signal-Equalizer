@@ -4,7 +4,6 @@ import numpy as np
 import pyqtgraph as pg
 from scipy.io import wavfile
 import sounddevice as sd
-import os
 from PyQt5.QtCore import QTimer
 class PlaybackButtonsController:
     def __init__(self,main_window):
