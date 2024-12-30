@@ -1,6 +1,6 @@
 import pyqtgraph as pg
 
-class wienerFilterController:
+class WienerFilterController:
     def __init__(self,wiener_filter_view,main_window):
         self.main_window = main_window
         self.wiener_filter_view = wiener_filter_view
@@ -9,7 +9,7 @@ class wienerFilterController:
 
 
     def apply_filter(self):
-        pass
+        self.main_window.buttons_controller.plot_the_signal()
 
     def reset_filter(self):
         pass
@@ -23,5 +23,17 @@ class wienerFilterController:
         self.wiener_filter_view.wiener_linear_region_item.setBounds([0,self.main_window.signal.time[len(self.main_window.signal.time)-1]])
         self.wiener_filter_view.wiener_linear_region_item.setRegion([0,self.main_window.signal.time[len(self.main_window.signal.time)-1]/2])
     
+    def extract_the_selected_region(self):
+        region = self.wiener_filter_view.wiener_linear_region_item.getRegion()
+
+        # for i,x in enumerate(x1):
+        #     if x >= signal_region1[0] and x <= signal_region1[1]:
+        #         new_x1.append(x)
+        #         new_y1.append(y1[i])
+
+        # for i,x in enumerate(x2):
+        #     if x >= signal_region2[0] and x <= signal_region2[1]:
+        #         new_x2.append(x)
+        #         new_y2.append(y2[i])
 
     

@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont
 import pyqtgraph as pg
-from controller.wiener_filter_controller import wienerFilterController
+from controller.wiener_filter_controller import WienerFilterController
 
 
 
@@ -55,6 +55,6 @@ class wienerFilterView(QWidget):
 
 
 
-        self.wiener_filter_controller = wienerFilterController(self,self.main_window)
+        self.wiener_filter_controller = WienerFilterController(self,self.main_window)
 
 

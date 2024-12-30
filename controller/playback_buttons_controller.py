@@ -69,8 +69,8 @@ class PlaybackButtonsController:
         self.main_window.input_cine_signal_viewer.cine_signal_plot.plot(self.main_window.signal.time, self.main_window.signal.data, pen=pg.mkPen(color=(170, 0, 0)))
         self.main_window.output_cine_signal_viewer.cine_signal_plot.plot(self.main_window.signal.time, self.main_window.signal.modified_data, pen=pg.mkPen(color=(170, 0, 0)))
 
-        if  self.main_window.mode_combobox.currentText() == "Weiner Filter":
-            self.main_window.weiner_filter_view.weiner_filter_controller.plot_the_weiner()
+        if  self.main_window.mode_combobox.currentText() == "wiener Filter":
+            self.main_window.wiener_filter_view.wiener_filter_controller.plot_the_wiener()
 
     def set_all_sliders_to_one(self):
         # Loop through all widgets in sliders_widget_layout

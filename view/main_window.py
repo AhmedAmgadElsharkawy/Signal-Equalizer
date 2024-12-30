@@ -4,7 +4,7 @@ from view.slider import Slider
 from model.mode_frequencies import mode_sliders_data,generate_uniform_range
 from view.cine_signal_viewer import CineSignalViewer
 from view.frequency_domain_viewer import FrequencyDomainViewer
-from view.weiner_filter_view import WeinerFilterView
+from view.wiener_filter_view import wienerFilterView
 from controller.frequency_domain_controller import FrequencyDomainController
 from controller.mode_controller import ModeController
 from controller.output_controller import OutputController
@@ -92,7 +92,7 @@ class MainWindow(QMainWindow):
         self.mode_label.setObjectName("mode_label")
         self.mode_combobox = QComboBox()
         self.mode_combobox.setObjectName("mode_combobox")
-        self.mode_combobox.addItems(["Uniform Range", "Musical Instruments", "Animal Sounds", "ECG Abnormalities","Weiner Filter"])
+        self.mode_combobox.addItems(["Uniform Range", "Musical Instruments", "Animal Sounds", "ECG Abnormalities","wiener Filter"])
         self.mode_widget_layout.addWidget(self.mode_label)
         self.mode_widget_layout.addWidget(self.mode_combobox)
 
@@ -232,8 +232,8 @@ class MainWindow(QMainWindow):
         mode = self.mode_combobox.currentText()
         self.signal.modified_data = self.signal.data
         self.remove_the_widgets()
-        if mode == 'Weiner Filter':
-            self.load_weiner_filter()
+        if mode == 'wiener Filter':
+            self.load_wiener_filter()
         else:
             self.load_mode_sliders()
         self.buttons_controller.plot_the_signal()
@@ -244,9 +244,9 @@ class MainWindow(QMainWindow):
             if widget is not None:
                 widget.deleteLater()
 
-    def load_weiner_filter(self):
-        self.weiner_filter_view = WeinerFilterView(self)
-        self.sliders_widget_layout.addWidget(self.weiner_filter_view)
+    def load_wiener_filter(self):
+        self.wiener_filter_view = wienerFilterView(self)
+        self.sliders_widget_layout.addWidget(self.wiener_filter_view)
 
 
     def load_mode_sliders(self):
