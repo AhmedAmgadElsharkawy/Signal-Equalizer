@@ -229,6 +229,7 @@ class MainWindow(QMainWindow):
             )
     
     def load_mode(self):
+        self.signal.reset_modified_data()
         mode = self.mode_combobox.currentText()
         self.signal.modified_data = self.signal.data
         self.remove_the_widgets()
