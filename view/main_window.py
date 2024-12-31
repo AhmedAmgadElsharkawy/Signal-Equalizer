@@ -231,7 +231,6 @@ class MainWindow(QMainWindow):
     def load_mode(self):
         self.signal.reset_modified_data()
         mode = self.mode_combobox.currentText()
-        self.signal.modified_data = self.signal.data
         self.remove_the_widgets()
         if mode == 'wiener Filter':
             self.load_wiener_filter()
@@ -263,7 +262,7 @@ class MainWindow(QMainWindow):
         if self.signal.sample_rate:
             self.signal.signal_processing(1, 0, 0)
             # self.buttons_controller.plot_the_signal()
-        self.update_sound_icons()
+        self.update_toggle_play_buttons()
 
     def update_sliders_and_mode_state(self,state):
         if len(self.signal.time) == 0:
@@ -276,7 +275,7 @@ class MainWindow(QMainWindow):
         self.mode_combobox.setEnabled(state)
 
         
-    def update_sound_icons(self):
+    def update_toggle_play_buttons(self):
         if len(self.signal.time) == 0:
             self.input_cine_signal_viewer.hide_toggle_sound_play_button()
             self.output_cine_signal_viewer.hide_toggle_sound_play_button()

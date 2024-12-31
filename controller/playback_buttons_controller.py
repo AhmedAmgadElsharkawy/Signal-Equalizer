@@ -23,7 +23,7 @@ class PlaybackButtonsController:
         if file_path:
             self.main_window.file_path = file_path
             self.main_window.signal.load_wav_data(file_path)  # Assumes this processes .wav files
-            self.main_window.update_sound_icons()
+            self.main_window.update_toggle_play_buttons()
             self.main_window.update_sliders_and_mode_state(True)
             self.main_window.update_controls_buttons_state(True)
             self.plot_the_signal()
