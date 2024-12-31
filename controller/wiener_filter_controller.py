@@ -12,6 +12,7 @@ class WienerFilterController:
 
 
     def apply_filter(self):
+        self.main_window.signal.reset_modified_data()
         selected_y = self.extract_the_selected_region()
     
         N = len(self.main_window.signal.data)
@@ -45,6 +46,9 @@ class WienerFilterController:
         filtered_signal = filtered_signal[:N]
         
         self.main_window.signal.modified_data = filtered_signal
+
+        self.main_window.signal.freq_coeffs = np.fft.rfft(filtered_signal)
+        self.main_window.signal.magnitudes = 10 / N * np.abs(self.main_window.signal.freq_coeffs)
         self.main_window.signal.sound_data = self.main_window.signal.modified_data / np.max(np.abs(self.main_window.signal.modified_data)) 
         
         self.main_window.buttons_controller.plot_the_signal()
