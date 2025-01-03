@@ -2,12 +2,23 @@ import numpy as np
 from scipy.io import wavfile
 import sounddevice as sd
 import pandas as pd
+from model.mode_frequencies import mode_sliders_data
 class OutputController:
     def __init__(self,main_window):
         self.main_widnow = main_window
+        self.data = {}
+
+        for mode, sliders in mode_sliders_data.items():
+            if sliders:  # Check if there are sliders in this mode
+                for slider in sliders:
+                    self.data[slider.ranges[0]] = slider.ranges
 
     def sliderChanged(self, value, min_freq, max_freq):
-        self.main_widnow.signal.signal_processing(value, min_freq, max_freq)
+        if (min_freq, max_freq) in self.data:
+            ranges = self.data[(min_freq, max_freq)]
+        else:
+            ranges = [(min_freq, max_freq)]
+        self.main_widnow.signal.signal_processing(value, ranges)
         self.main_widnow.buttons_controller.plot_the_signal()
 
     def save_and_play_wav(self, file_path, modified_data, sample_rate): 

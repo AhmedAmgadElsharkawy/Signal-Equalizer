@@ -255,12 +255,12 @@ class MainWindow(QMainWindow):
         # generate_uniform_range(self.signal.freqs)
         mode_sliders_list = mode_sliders_data[mode]
         for slider_object in mode_sliders_list:
-            slider = Slider(name=slider_object.slider_label, min_range_value=slider_object.min_freq, max_range_value=slider_object.max_freq)
+            slider = Slider(name=slider_object.slider_label, min_range_value=slider_object.ranges[0][0], max_range_value=slider_object.ranges[0][1])
             self.sliders_widget_layout.addWidget(slider)
             slider.slider_widget.setValue(1)
             slider.valueChanged.connect(self.on_slider_value_changed)
         if self.signal.sample_rate:
-            self.signal.signal_processing(1, 0, 0)
+            self.signal.signal_processing(1, [])
             # self.buttons_controller.plot_the_signal()
         self.update_toggle_play_buttons()
 
