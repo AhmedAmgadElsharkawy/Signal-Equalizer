@@ -11,11 +11,12 @@ class slider_data:
 mode_sliders_data = {
     "Uniform Range":[],
 
-    "Musical Instruments":[slider_data("bass",0,350),slider_data("triangle",351,1000),
-                           slider_data("trombone",860,4000),slider_data("xylephone",4200,22000)],
+    "Musical Instruments":[slider_data("bass",0,550),slider_data("Guitar",0,1000),
+                           slider_data("5",500,700),slider_data("7",700,900),slider_data("9",900, 1100),slider_data("11",1100,1300),
+                           slider_data("1",6000,7000),slider_data("15",1500,1700),slider_data("17",1700,2500) ,slider_data("S",3500,11700)],
 
-    "Animal Sounds":[slider_data("owl",650,950),slider_data("frog",951,1900),
-                    slider_data("canary",3000,5500),slider_data("insect",6000,20000)],
+    "Animal Sounds":[slider_data("owl",1000,1200),slider_data("frog",1200,1400),
+                    slider_data("canary",1400,1600),slider_data("insect",6000,20000)],
 
     "ECG Abnormalities":[slider_data("normal",0,150),slider_data("Aflut",40,60),
                     slider_data("Vt",95,155),slider_data("Afib",60,95)]
