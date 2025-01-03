@@ -92,7 +92,7 @@ class MainWindow(QMainWindow):
         self.mode_label.setObjectName("mode_label")
         self.mode_combobox = QComboBox()
         self.mode_combobox.setObjectName("mode_combobox")
-        self.mode_combobox.addItems(["Uniform Range", "Musical Instruments", "Animal Sounds", "ECG Abnormalities","wiener Filter"])
+        self.mode_combobox.addItems(["Uniform Range", "Musical Instruments", "Animal Sounds", "wiener Filter"])
         self.mode_widget_layout.addWidget(self.mode_label)
         self.mode_widget_layout.addWidget(self.mode_combobox)
 
