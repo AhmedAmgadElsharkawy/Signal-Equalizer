@@ -29,8 +29,8 @@ class PlaybackButtonsController:
             self.plot_the_signal()
             self.set_all_sliders_to_one()
 
-            self.main_window.input_cine_signal_viewer.cine_signal_plot.setLimits(xMin=0, xMax=self.main_window.signal.time[len(self.main_window.signal.time)-1], yMin=self.main_window.signal.min_data_point, yMax=self.main_window.signal.max_data_point)
-            self.main_window.output_cine_signal_viewer.cine_signal_plot.setLimits(xMin=0, xMax=self.main_window.signal.time[len(self.main_window.signal.time)-1], yMin=self.main_window.signal.min_data_point, yMax=self.main_window.signal.max_data_point)
+            self.main_window.input_cine_signal_viewer.cine_signal_plot.setLimits(xMin=0, xMax=self.main_window.signal.time[len(self.main_window.signal.time)-1], yMin=self.main_window.signal.min_data_point - 5000, yMax=self.main_window.signal.max_data_point + 5000)
+            self.main_window.output_cine_signal_viewer.cine_signal_plot.setLimits(xMin=0, xMax=self.main_window.signal.time[len(self.main_window.signal.time)-1], yMin=self.main_window.signal.min_data_point - 5000, yMax=self.main_window.signal.max_data_point + 5000)
             self.main_window.input_cine_signal_viewer.cine_signal_plot.setXRange(0, self.main_window.signal.time[len(self.main_window.signal.time)-1])
             self.main_window.input_cine_signal_viewer.cine_signal_plot.setYRange(self.main_window.signal.min_data_point, self.main_window.signal.max_data_point)
 
