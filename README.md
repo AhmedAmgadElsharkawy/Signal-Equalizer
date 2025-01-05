@@ -1,5 +1,5 @@
 # Signal-Equalizer
-A desktop signal processing app for adjusting frequency magnitudes across different modes (Uniform, Musical Instruments, Animal Sounds, ECG). Includes real-time Fourier visualization, synchronized signal viewers, spectrograms, and playback controls.
+A desktop signal processing app for adjusting frequency magnitudes across different modes (Uniform Range, Music & Vowels Mix, Music & Animals Mix, Wiener Filter). Features include real-time Fourier visualization, synchronized signal viewers with playback controls, dynamic spectrograms, signal equalization with sliders, noise removal based on silent segments, and the ability to reconstruct signals after modifications.
 
 <div align="center">
   <img src="assets/images/app_preview.png" />
@@ -43,8 +43,6 @@ A desktop signal processing app for adjusting frequency magnitudes across differ
 - **Music & Vowels Mix Mode**: Control the magnitude of specific musical instruments or specific vowel from these vowels in a mixture using dedicated sliders.
 
 - **Music & Animals Mix Mode**: Adjust the magnitude of individual animal sounds or specific specific musical instruments in a mixture via sliders.
-
-- **ECG Abnormalities Mode**: Modify the magnitude of normal and arrhythmic components of ECG signals, with sliders corresponding to different arrhythmias.
 
 - **Wiener Mode**: Remove noise from the signal based on a selected silent segment, ensuring a cleaner output.
 
