@@ -14,43 +14,35 @@ class WienerFilterController:
     def apply_filter(self):
         self.main_window.signal.reset_modified_data()
         selected_y = self.extract_the_selected_region()
-    
+
         N = len(self.main_window.signal.data)
         signal_fft = self.main_window.signal.freq_coeffs
-        phase = np.angle(signal_fft)
 
         noise_fft = np.fft.rfft(selected_y, n=N)
-        noise_power = (np.abs(noise_fft) ** 2) / N
 
-        signal_power = (np.abs(signal_fft) ** 2) / N
+        signal_psd = np.abs(signal_fft)**2
+        noise_psd = np.abs(noise_fft)**2
+        alpha = 30
 
-        window_size = 25  
-        kernel = np.ones(window_size) / window_size
+        window_size = 25
+        kernel = np.hanning(window_size)
 
-        signal_power_smooth = np.convolve(signal_power, kernel, mode='same')
-        noise_power_smooth = np.convolve(noise_power, kernel, mode='same')
+        signal_psd = np.convolve(signal_psd, kernel, mode='same')
+        noise_psd = np.convolve(noise_psd, kernel, mode='same')
 
-        snr = signal_power_smooth / (noise_power_smooth + 1e-10)
-        
-        snr_threshold = 0.3 
-        gain = np.maximum(1 - 1 / (snr + 1), 0)
-        gain[snr < snr_threshold] *= 0.5 
+        weights = signal_psd / (signal_psd + alpha * noise_psd)
 
-        alpha = 10.0  
-        gain = np.maximum(1 - alpha * (noise_power_smooth / (signal_power_smooth + 1e-10)), 0.1)
-        gain = np.tanh(gain) 
-        
-        filtered_fft = signal_fft * gain
-        filtered_fft = np.abs(filtered_fft) * np.exp(1j * phase)
-        filtered_signal = np.fft.irfft(filtered_fft)
+        weighted_signal = signal_fft * weights
+
+        filtered_signal = np.fft.irfft(weighted_signal)
         filtered_signal = filtered_signal[:N]
-        
-        self.main_window.signal.modified_data = filtered_signal
 
+        self.main_window.signal.modified_data = filtered_signal
         self.main_window.signal.freq_coeffs = np.fft.rfft(filtered_signal)
         self.main_window.signal.magnitudes = 10 / N * np.abs(self.main_window.signal.freq_coeffs)
+
         self.main_window.signal.sound_data = self.main_window.signal.modified_data / np.max(np.abs(self.main_window.signal.modified_data)) 
-        
+
         self.main_window.buttons_controller.plot_the_signal()
 
     def reset_filter(self):
