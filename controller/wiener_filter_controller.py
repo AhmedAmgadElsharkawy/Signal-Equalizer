@@ -24,7 +24,7 @@ class WienerFilterController:
         noise_psd = np.abs(noise_fft)**2
         alpha = 30
 
-        window_size = 25
+        window_size = 30
         kernel = np.hanning(window_size)
 
         signal_psd = np.convolve(signal_psd, kernel, mode='same')
