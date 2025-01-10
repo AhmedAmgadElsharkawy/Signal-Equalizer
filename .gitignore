@@ -27,5 +27,3 @@ data/modified_input_data/*
 
 # Environment variable files
 .env
-
-tempCodeRunnerFile.python
